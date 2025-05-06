@@ -1,8 +1,8 @@
 import streamlit as st
 from app.api_client import api_get
-from app.config import settings
 from app.components.book_card import render_book_card
 from app.state import set_selected_book
+
 
 def search_page():
     st.header('Discover Books')
@@ -24,9 +24,13 @@ def search_page():
         st.session_state['search_page'] = page - 1
         st.experimental_rerun()
     info.markdown(
-        f"<h5 style='text-align:center;'>Page {page} of {data.get('total_pages', 1)}</h5>",
+        f"""<h5 style='text-align:center;'>Page {
+            page
+            } of {data.get('total_pages', 1)}</h5>""",
         unsafe_allow_html=True
     )
-    if nxt.button('Next', key='next_page') and page < data.get('total_pages', 1):
+    if nxt.button(
+        'Next', key='next_page'
+    ) and page < data.get('total_pages', 1):
         st.session_state['search_page'] = page + 1
         st.experimental_rerun()

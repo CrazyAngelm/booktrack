@@ -1,10 +1,18 @@
 import streamlit as real_st
 import os
 import sys
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 import app.components.details as mod
-from app.api_client import api_get
 import pytest
+sys.path.insert(
+    0,
+    os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            '../..'
+            )
+        )
+    )
+
 
 class Col:
     def __init__(self):
@@ -45,7 +53,8 @@ class Col:
 
 class STStub:
     """
-    Stub of streamlit that routes calls like image/header/write/button/selectbox
+    Stub of streamlit that routes calls like
+    image/header/write/button/selectbox
     to the currently active Col instance, and routes pre-context buttons
     (like Back-to-List) to the second column of the next columns() pair.
     """
@@ -97,7 +106,6 @@ class STStub:
         self.did_rerun = True
 
 
-
 @pytest.fixture(autouse=True)
 def clear_session_state():
     real_st.session_state.clear()
@@ -109,7 +117,10 @@ def test_book_not_found(monkeypatch):
     real_st.session_state['selected_book'] = 42
     monkeypatch.setattr(mod, 'api_get', lambda path: None)
     cleared = {'called': False}
-    monkeypatch.setattr(mod, 'clear_details', lambda: cleared.__setitem__('called', True))
+    monkeypatch.setattr(
+        mod, 'clear_details',
+        lambda: cleared.__setitem__('called', True)
+    )
 
     stub = STStub([])
     monkeypatch.setattr(mod, 'st', stub)
@@ -121,13 +132,20 @@ def test_book_not_found(monkeypatch):
 
 
 def test_back_button_top_early_exit(monkeypatch):
-    book = {'id':1,'title':'T','authors':['A'],'cover_url':'u','rating':5,'description':'D'}
+    book = {
+        'id': 1,
+        'title': 'T',
+        'authors': ['A'],
+        'cover_url': 'u',
+        'rating': 5,
+        'description': 'D'
+    }
     real_st.session_state['selected_book'] = 1
     monkeypatch.setattr(mod, 'api_get', lambda path: book)
     monkeypatch.setattr(mod, 'clear_details', lambda: None)
 
     col1, col2 = Col(), Col()
-    col2.button_calls[f'back_btn_top_1'] = True
+    col2.button_calls['back_btn_top_1'] = True
 
     stub = STStub([(col1, col2)])
     monkeypatch.setattr(mod, 'st', stub)
@@ -141,14 +159,28 @@ def test_back_button_top_early_exit(monkeypatch):
 def test_add_to_favourites(monkeypatch):
     bid = 7
     real_st.session_state['selected_book'] = bid
-    book = {'id':bid,'title':'T','authors':['A'],'cover_url':'u'}
+    book = {
+        'id': bid,
+        'title': 'T',
+        'authors': ['A'],
+        'cover_url': 'u'
+    }
 
     seq = [book, [], []]
     monkeypatch.setattr(mod, 'api_get', lambda path: seq.pop(0))
 
     calls = {}
-    monkeypatch.setattr(mod, 'api_post', lambda path, json: calls.setdefault('post', (path, json)))
-    monkeypatch.setattr(mod, 'api_delete', lambda path: calls.setdefault('delete', path))
+    monkeypatch.setattr(
+        mod,
+        'api_post',
+        lambda path,
+        json: calls.setdefault('post', (path, json))
+    )
+    monkeypatch.setattr(
+        mod,
+        'api_delete',
+        lambda path: calls.setdefault('delete', path)
+    )
     monkeypatch.setattr(mod, 'clear_details', lambda: None)
 
     col1, col2 = Col(), Col()
@@ -161,20 +193,36 @@ def test_add_to_favourites(monkeypatch):
 
     mod.details_page()
 
-    assert calls['post'] == (f'/favourites/', {'book_id': bid})
+    assert calls['post'] == ('/favourites/', {'book_id': bid})
 
 
 def test_update_status_and_remove(monkeypatch):
     bid = 3
     real_st.session_state['selected_book'] = bid
-    book = {'id':bid,'title':'T','authors':['A'],'cover_url':'u'}
+    book = {
+        'id': bid,
+        'title': 'T',
+        'authors': ['A'],
+        'cover_url': 'u'
+    }
 
-    seq = [book, [], [{'id':bid,'status':'Read'}]]
+    seq = [book, [], [{
+        'id': bid,
+        'status': 'Read'
+        }]]
     monkeypatch.setattr(mod, 'api_get', lambda path: seq.pop(0))
 
     ops = {}
-    monkeypatch.setattr(mod, 'api_put', lambda path, json: ops.setdefault('put', (path, json)))
-    monkeypatch.setattr(mod, 'api_delete', lambda path: ops.setdefault('delete', path))
+    monkeypatch.setattr(
+        mod,
+        'api_put',
+        lambda path,
+        json: ops.setdefault('put', (path, json))
+    )
+    monkeypatch.setattr(mod,
+                        'api_delete',
+                        lambda path: ops.setdefault('delete', path)
+                        )
     monkeypatch.setattr(mod, 'api_post', lambda *a, **k: None)
     monkeypatch.setattr(mod, 'clear_details', lambda: None)
 
