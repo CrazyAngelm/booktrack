@@ -1,0 +1,7 @@
+streamlit>=1.30
+requests
+pytest
+selenium
+pytest-selenium
+ruff
+flake8
