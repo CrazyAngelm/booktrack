@@ -1,5 +1,4 @@
 import streamlit as st
-from config import settings
 from components.search import search_page
 from components.details import details_page
 from components.favourites import favourites_page
@@ -13,8 +12,12 @@ if st.session_state['selected_book'] is not None:
     details_page()
     st.stop()
 
-tabs = st.tabs(['Search','Favourites','Reading List','Dashboard'])
-with tabs[0]: search_page()
-with tabs[1]: favourites_page()
-with tabs[2]: reading_list_page()
-with tabs[3]: dashboard_page()
+tabs = st.tabs(['Search', 'Favourites', 'Reading List', 'Dashboard'])
+with tabs[0]:
+    search_page()
+with tabs[1]:
+    favourites_page()
+with tabs[2]:
+    reading_list_page()
+with tabs[3]:
+    dashboard_page()

@@ -5,6 +5,7 @@ from app.config import settings
 if settings.USE_FAKE_DATA:
     from app.fake_data import FAKE_BOOKS, FAKE_DETAILS, FAKE_FAV, FAKE_RL
 
+
 def api_get(path: str, params: dict = None):
     if settings.USE_FAKE_DATA:
         # list /books/
@@ -33,12 +34,14 @@ def api_get(path: str, params: dict = None):
     resp.raise_for_status()
     return resp.json()
 
+
 def api_post(path: str, json: dict = None):
     if settings.USE_FAKE_DATA and path == '/favourites/':
         FAKE_FAV.append(FAKE_DETAILS.get(json['book_id']))
         return True
     resp = requests.post(f"{settings.API_BASE_URL}{path}", json=json or {})
     return resp.ok
+
 
 def api_put(path: str, json: dict = None):
     if settings.USE_FAKE_DATA and path.startswith('/reading-list/'):
@@ -51,6 +54,7 @@ def api_put(path: str, json: dict = None):
         return True
     resp = requests.put(f"{settings.API_BASE_URL}{path}", json=json or {})
     return resp.ok
+
 
 def api_delete(path: str):
     if settings.USE_FAKE_DATA:

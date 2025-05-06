@@ -31,7 +31,8 @@ if USE_FAKE_DATA:
             'id': i,
             'title': f'Sample Book {i}',
             'authors': [f'Author {i}'],
-            'excerpt': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            'excerpt':
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
             'cover_url': COVER_URLS[(i-1) % len(COVER_URLS)],
             'popularity': random.randint(1, 100)
         })
@@ -42,12 +43,16 @@ if USE_FAKE_DATA:
             'title': b['title'],
             'authors': b['authors'],
             'cover_url': b['cover_url'],
-            'description': f'Full description for {b["title"]}. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            'description': f'''Full description for
+            {b["title"]}.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.''',
             'rating': round(random.uniform(1, 5), 1)
         }
         for b in FAKE_BOOKS
     }
-    FAKE_FAV = [FAKE_BOOKS[i] for i in random.sample(range(len(FAKE_BOOKS)), 10)]
+    FAKE_FAV = [
+        FAKE_BOOKS[i] for i in random.sample(range(len(FAKE_BOOKS)), 10)
+    ]
     FAKE_RL = [
         {**FAKE_BOOKS[1], 'status': 'Reading'},
         {**FAKE_BOOKS[3], 'status': 'Want'},
@@ -58,6 +63,7 @@ if USE_FAKE_DATA:
 st.session_state.setdefault('token', 'demo')
 st.session_state.setdefault('search_page', 1)
 st.session_state.setdefault('selected_book', None)
+
 
 # API helper functions
 def api_get(path, params=None):
@@ -79,8 +85,11 @@ def api_get(path, params=None):
             return FAKE_FAV
         if path == '/reading-list/':
             return FAKE_RL
-    resp = requests.get(f"{API_BASE_URL}{path}", params=params or {}, headers={})
+    resp = requests.get(
+        f"{API_BASE_URL}{path}", params=params or {}, headers={}
+    )
     return resp.json() if resp.ok else {}
+
 
 def api_post(path, json=None):
     if USE_FAKE_DATA and path == '/favourites/':
@@ -88,6 +97,7 @@ def api_post(path, json=None):
         return True
     resp = requests.post(f"{API_BASE_URL}{path}", json=json or {}, headers={})
     return resp.ok
+
 
 def api_put(path, json=None):
     if USE_FAKE_DATA and path.startswith('/reading-list/'):
@@ -101,6 +111,7 @@ def api_put(path, json=None):
     resp = requests.put(f"{API_BASE_URL}{path}", json=json or {}, headers={})
     return resp.ok
 
+
 def api_delete(path):
     if USE_FAKE_DATA:
         bid = int(path.rsplit('/', 1)[1])
@@ -112,12 +123,15 @@ def api_delete(path):
     resp = requests.delete(f"{API_BASE_URL}{path}", headers={})
     return resp.ok
 
+
 # State management callbacks
 def clear_details():
     st.session_state['selected_book'] = None
 
+
 def set_selected_book(book_id):
     st.session_state['selected_book'] = book_id
+
 
 # Page: Details view
 def details_page():
@@ -128,7 +142,9 @@ def details_page():
         clear_details()
         return
 
-    if st.button('← Back to List', key=f'back_btn_top_{bid}', on_click=clear_details):
+    if st.button(
+        '← Back to List', key=f'back_btn_top_{bid}', on_click=clear_details
+    ):
         return
 
     st.write('---')
@@ -159,7 +175,11 @@ def details_page():
         rl = api_get('/reading-list/')
         current = next((r['status'] for r in rl if r['id'] == bid), None)
         options = ['None', 'Want', 'Reading', 'Read']
-        selection = st.selectbox('Reading Status', options, index=options.index(current) if current in options else 0)
+        selection = st.selectbox(
+            'Reading Status',
+            options,
+            index=options.index(current) if current in options else 0
+            )
         if st.button('Update Status', key=f'upd_btn_{bid}'):
             if selection != 'None':
                 api_put(f'/reading-list/{bid}', {'status': selection})
@@ -168,8 +188,11 @@ def details_page():
             return
 
     st.write('---')
-    if st.button('← Back to List', key=f'back_btn_bottom_{bid}', on_click=clear_details):
+    if st.button(
+        '← Back to List', key=f'back_btn_bottom_{bid}', on_click=clear_details
+    ):
         return
+
 
 # Page: Search & Discover
 
@@ -182,32 +205,46 @@ def search_page():
 
     page = st.session_state['search_page']
     data = api_get('/books/', {'search': query, 'page': page})
-
-    ## empty space
+    # empty space
     st.markdown('---')
     for b in data.get('results', []):
-        img_col, txt_col, act_col = st.columns([1, 4, 1], gap='medium', vertical_alignment='center')
+        img_col, txt_col, act_col = st.columns(
+            [1, 4, 1], gap='medium', vertical_alignment='center'
+        )
         img_col.image(b['cover_url'], width=140)
         txt_col.markdown(f"**{b['title']}**  by {', '.join(b['authors'])}")
         txt_col.markdown(f"Popularity: {b['popularity']}")
         txt_col.markdown(f"Excerpt: {b['excerpt']}")
-        if act_col.button('Details', key=f'detail_{b['id']}', on_click=set_selected_book, args=(b['id'],)):
+        if act_col.button(
+            'Details', key=f'detail_{b['id']}',
+            on_click=set_selected_book, args=(b['id'],)
+        ):
             return
 
     st.markdown('---')
-    p1, p2, p3 = st.columns([1, 1, 1], vertical_alignment='center' )
-    if p1.button('Previous', key='prev_page', use_container_width=True) and page > 1:
+    p1, p2, p3 = st.columns([1, 1, 1], vertical_alignment='center')
+    if p1.button(
+        'Previous', key='prev_page', use_container_width=True
+    ) and page > 1:
         st.session_state['search_page'] = page - 1
-    p2.markdown(f"<h5 style='text-align: center;'>Page {page} of {data.get('total_pages', 1)}</h5>", unsafe_allow_html=True)
-    if p3.button('Next', key='next_page', use_container_width=True) and page < data.get('total_pages', 1):
+    p2.markdown(f"""<h5 style='text-align: center;'>
+                Page {page} of {
+                    data.get('total_pages', 1)
+                }</h5>""", unsafe_allow_html=True)
+    if p3.button(
+        'Next', key='next_page', use_container_width=True
+    ) and page < data.get('total_pages', 1):
         st.session_state['search_page'] = page + 1
 
 # Page: Favourites
 
+
 def favourites_page():
     st.header('My Favourites')
     for f in api_get('/favourites/'):
-        img_col, txt_col, rm_col = st.columns([1, 4, 1], gap='medium', vertical_alignment='center')
+        img_col, txt_col, rm_col = st.columns(
+            [1, 4, 1], gap='medium', vertical_alignment='center'
+        )
         img_col.image(f['cover_url'], width=140)
         txt_col.markdown(f"**{f['title']}**  by {', '.join(f['authors'])}")
         txt_col.markdown(f"Popularity: {f['popularity']}")
@@ -218,23 +255,36 @@ def favourites_page():
 
 # Page: Reading List
 
+
 def reading_list_page():
-    c1, c2, c3 = st.columns([8, 1, 1], gap='small', vertical_alignment='bottom')
+    c1, c2, c3 = st.columns(
+        [8, 1, 1], gap='small', vertical_alignment='bottom'
+    )
     c1.header('My Reading List')
-    status_filter = c2.selectbox('Filter', ['All', 'Want', 'Reading', 'Read'], key='filter_status')
+    status_filter = c2.selectbox(
+        'Filter', ['All', 'Want', 'Reading', 'Read'], key='filter_status'
+    )
     for r in api_get('/reading-list/'):
         if status_filter != 'All' and r['status'] != status_filter:
             continue
-        img_col, txt_col, act_col = st.columns([1, 4, 1], gap='medium', vertical_alignment='center')
+        img_col, txt_col, act_col = st.columns(
+            [1, 4, 1], gap='medium', vertical_alignment='center'
+        )
         img_col.image(r['cover_url'], width=140)
         txt_col.markdown(f"**{r['title']}** \u2014 Status: {r['status']}")
         txt_col.markdown(f"by {', '.join(r['authors'])}")
         txt_col.markdown(f"Popularity: {r['popularity']}")
         txt_col.markdown(f"Excerpt: {r['excerpt']}")
-        if act_col.button('Details', key=f'reading_{r['id']}', on_click=set_selected_book, args=(r['id'],)):
+        if act_col.button(
+            'Details',
+            key=f'reading_{r['id']}',
+            on_click=set_selected_book,
+            args=(r['id'],)
+        ):
             return
 
 # Page: Dashboard
+
 
 def dashboard_page():
     st.header('Dashboard')
@@ -249,6 +299,7 @@ def dashboard_page():
     c3.metric('Recent Favourite', recent)
 
 # Main
+
 
 st.set_page_config(page_title='BookTrack', layout='wide')
 

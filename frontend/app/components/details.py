@@ -3,6 +3,7 @@ import streamlit as st
 from app.api_client import api_get, api_post, api_put, api_delete
 from app.state import clear_details
 
+
 def details_page():
     bid = st.session_state['selected_book']
     book = api_get(f'/books/{bid}')
@@ -11,7 +12,11 @@ def details_page():
         clear_details()
         return
 
-    if st.button('← Back to List', key=f'back_btn_top_{bid}', on_click=clear_details):
+    if st.button(
+        '← Back to List',
+        key=f'back_btn_top_{bid}',
+        on_click=clear_details
+    ):
         return
 
     st.write('---')
@@ -52,5 +57,9 @@ def details_page():
             st.experimental_rerun()
 
     st.write('---')
-    if st.button('← Back to List', key=f'back_btn_bottom_{bid}', on_click=clear_details):
+    if st.button(
+        '← Back to List',
+        key=f'back_btn_bottom_{bid}',
+        on_click=clear_details
+    ):
         return

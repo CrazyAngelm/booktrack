@@ -2,6 +2,7 @@
 import streamlit as st
 from api_client import api_get
 
+
 def dashboard_page():
     st.header('Dashboard')
     rl = api_get('/reading-list/')

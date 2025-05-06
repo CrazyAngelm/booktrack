@@ -3,9 +3,14 @@ import streamlit as st
 from app.api_client import api_get
 from app.state import set_selected_book
 
+
 def reading_list_page():
     st.header('My Reading List')
-    status_filter = st.selectbox('Filter', ['All', 'Want', 'Reading', 'Read'], key='filter_status')
+    status_filter = st.selectbox(
+        'Filter',
+        ['All', 'Want', 'Reading', 'Read'],
+        key='filter_status'
+    )
     rl = api_get('/reading-list/')
 
     if not rl:
@@ -21,5 +26,10 @@ def reading_list_page():
         cols[1].markdown(f"by {', '.join(book['authors'])}")
         cols[1].markdown(f"Popularity: {book.get('popularity', 'N/A')}")
         cols[1].markdown(f"Excerpt: {book.get('excerpt', '')}")
-        if cols[2].button('Details', key=f'reading_{book["id"]}', on_click=set_selected_book, args=(book['id'],)):
+        if cols[2].button(
+            'Details',
+            key=f'reading_{book["id"]}',
+            on_click=set_selected_book,
+            args=(book['id'],)
+        ):
             st.experimental_rerun()

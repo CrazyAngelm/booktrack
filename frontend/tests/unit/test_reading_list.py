@@ -1,9 +1,18 @@
 import streamlit as real_st
 import os
 import sys
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 import app.components.reading_list as mod
 import pytest
+sys.path.insert(
+    0,
+    os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            '../..'
+            )
+        )
+    )
+
 
 class Col:
     def __init__(self):
@@ -22,7 +31,8 @@ class Col:
         if clicked and on_click:
             on_click(*args if args else [])
         return clicked
-    
+
+
 class STStub:
     """
     Stub for streamlit in reading_list_page:
@@ -54,11 +64,13 @@ class STStub:
     def experimental_rerun(self):
         self.did_rerun = True
 
+
 @pytest.fixture(autouse=True)
 def clear_state():
     real_st.session_state.clear()
     yield
     real_st.session_state.clear()
+
 
 def test_empty_reading_list(monkeypatch):
     # api_get returns empty
@@ -71,11 +83,28 @@ def test_empty_reading_list(monkeypatch):
     assert stub.last_header == 'My Reading List'
     assert stub.last_info == "Your reading list is empty."
 
+
 def test_render_all_status(monkeypatch):
     # Prepare two books with different statuses
     rl = [
-        {'id':1,'title':'Book1','authors':['A'],'cover_url':'u1','status':'Want','popularity':10,'excerpt':'X'},
-        {'id':2,'title':'Book2','authors':['B'],'cover_url':'u2','status':'Read','popularity':20,'excerpt':'Y'},
+        {
+            'id': 1,
+            'title': 'Book1',
+            'authors': ['A'],
+            'cover_url': 'u1',
+            'status': 'Want',
+            'popularity': 10,
+            'excerpt': 'X'
+        },
+        {
+            'id': 2,
+            'title': 'Book2',
+            'authors': ['B'],
+            'cover_url': 'u2',
+            'status': 'Read',
+            'popularity': 20,
+            'excerpt': 'Y'
+        },
     ]
     monkeypatch.setattr(mod, 'api_get', lambda path: rl)
 
@@ -88,7 +117,9 @@ def test_render_all_status(monkeypatch):
     monkeypatch.setattr(mod, 'st', stub)
     # track set_selected_book calls
     calls = []
-    monkeypatch.setattr(mod, 'set_selected_book', lambda bid: calls.append(bid))
+    monkeypatch.setattr(
+        mod, 'set_selected_book', lambda bid: calls.append(bid)
+    )
 
     mod.reading_list_page()
 
@@ -106,11 +137,28 @@ def test_render_all_status(monkeypatch):
     assert col1b.image_calls == [('u2', 140)]
     assert any('**Book2**' in md for md in col2b.markdown_calls)
 
+
 def test_filter_by_status_and_details_click(monkeypatch):
     # Only render items matching status="Reading"
     rl = [
-        {'id':1,'title':'B1','authors':['A'],'cover_url':'u','status':'Reading','popularity':5,'excerpt':''},
-        {'id':2,'title':'B2','authors':['B'],'cover_url':'v','status':'Want','popularity':8,'excerpt':''},
+        {
+            'id': 1,
+            'title': 'B1',
+            'authors': ['A'],
+            'cover_url': 'u',
+            'status': 'Reading',
+            'popularity': 5,
+            'excerpt': ''
+        },
+        {
+            'id': 2,
+            'title': 'B2',
+            'authors': ['B'],
+            'cover_url': 'v',
+            'status': 'Want',
+            'popularity': 8,
+            'excerpt': ''
+        },
     ]
     monkeypatch.setattr(mod, 'api_get', lambda path: rl)
 
@@ -124,7 +172,9 @@ def test_filter_by_status_and_details_click(monkeypatch):
 
     # capture set_selected_book and rerun
     selected = []
-    monkeypatch.setattr(mod, 'set_selected_book', lambda bid: selected.append(bid))
+    monkeypatch.setattr(
+        mod, 'set_selected_book', lambda bid: selected.append(bid)
+    )
 
     mod.reading_list_page()
 

@@ -1,11 +1,19 @@
 import streamlit as real_st
 import os
 import sys
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 import app.components.search as mod
-from app.api_client import api_get
 import types
 import pytest
+sys.path.insert(
+    0,
+    os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            '../..'
+            )
+        )
+    )
+
 
 class ColStub:
     def __init__(self, text_input_ret="", button_ret=False):
@@ -41,7 +49,7 @@ def make_stub_st(cols_sequence):
     stub.session_state = real_st.session_state
     stub.header = lambda *a, **k: None
     stub.markdown = lambda *a, **k: None
-    stub.experimental_rerun = lambda : None
+    stub.experimental_rerun = lambda: None
     # columns() will pop the next tuple/list from cols_sequence
     stub.columns = lambda *a, **k: cols_sequence.pop(0)
     return stub
@@ -50,6 +58,7 @@ def make_stub_st(cols_sequence):
 def test_search_calls_api(monkeypatch):
     """Default load should call api_get('/books/', {'search':'', 'page':1})."""
     called = {}
+
     def fake_api_get(path, params):
         called['path'], called['params'] = path, params
         return {'results': [], 'total_pages': 1}
@@ -105,7 +114,8 @@ def test_search_button_sets_page(monkeypatch):
 
 
 def test_pagination_prev_and_next(monkeypatch):
-    """When Prev is clicked (page>1) it decrements; when Next is clicked (page<total), it increments."""
+    """When Prev is clicked (page>1) it decrements;
+    when Next is clicked (page<total), it increments."""
     # Stub out api_get to always return 3 total pages
     monkeypatch.setattr(mod, 'api_get',
                         lambda path, params: {'results': [], 'total_pages': 3})
