@@ -1,0 +1,15 @@
+db:
+  postgres:
+    url: ${DATABASE_URL}
+
+auth:
+  jwt:
+    secret: ${JWT_SECRET}
+    algorithm: ${JWT_ALGORITHM}
+  token:
+    expiration: ${ACCESS_TOKEN_EXPIRATION}
+  refresh_token:
+    expiration: ${REFRESH_TOKEN_EXPIRATION}
+
+general:
+  gutendex_base_url: ${GUTINDEX_BASE_URL}
