@@ -1,6 +1,6 @@
 import streamlit as st
 
-from app import render_book_card
+from app.components.book_card import render_book_card
 
 class DummyCol:
     def __init__(self):
