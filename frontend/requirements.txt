@@ -3,5 +3,6 @@ requests
 pytest
 selenium
 pytest-selenium
+pytest-cov
 ruff
 flake8
