@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+      - name: Install deps
+        run: pip install ruff flake8 pytest
+      - name: Lint (ruff)
+        run: ruff check .
+      - name: Lint (flake8)
+        run: flake8 .
+      - name: Run tests
+        run: pytest --maxfail=1 --disable-warnings -q
+
+  docker-build:
+    needs: lint-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Docker image
+        run: docker build -t booktrack-frontend:${{ github.sha }} .
