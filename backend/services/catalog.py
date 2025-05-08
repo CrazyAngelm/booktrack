@@ -32,3 +32,18 @@ class CatalogService():
             return response.json()
         else:
             return None
+        
+    def search_books(self, query: str, page_no: int, page_size: int):
+        """
+        Searches for books in the database.
+        """
+        url = self.config.get_gutendex_base_url() + "/books"
+        params = {
+            "search": query,
+            "page": page_no
+        }
+        response = requests.get(url, params=params)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return None
