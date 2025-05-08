@@ -23,6 +23,18 @@ def fetch_favourites_for_user_endpoint(
     return {"user_email": user.email, "favourites": result}
 
 
+@favourites_router.get("/api/favourites/{book_id}", response_model=FavouriteRead, status_code=200)
+def fetch_favourite_for_user_endpoint(
+    book_id: int,
+    user: AuthenticatedUser = Depends(get_user),
+    db: Session = Depends(get_db),
+):
+    result = favourites_service.fetch_favourite_for_user(user.email, book_id, db)
+    if not result:
+        raise HTTPException(status_code=404, detail="Favourite not found")
+    return result
+
+
 @favourites_router.post("/api/favourites", response_model=FavouriteRead, status_code=201)
 def create_favourite_endpoint(
     book_id: int,
