@@ -26,7 +26,9 @@ def mock_refresh_token():
 
 
 def test_get_user_by_email(mock_db, mock_user):
-    mock_db.query.return_value.filter.return_value.first.return_value = mock_user
+    mock_db.query.return_value.filter.return_value.first.return_value = (
+        mock_user
+    )
 
     result = get_user_by_email(mock_db, "test@example.com")
 
@@ -57,7 +59,8 @@ def test_save_refresh_token_updates_existing(mock_db, mock_refresh_token):
     token = "updated_token"
     expires = "2026-01-01T00:00:00"
 
-    mock_db.query.return_value.filter.return_value.first.return_value = mock_refresh_token
+    mock_db.query.return_value.filter.return_value.first.return_value = (
+        mock_refresh_token)
 
     save_refresh_token(mock_db, user_id, token, expires)
 
@@ -68,7 +71,8 @@ def test_save_refresh_token_updates_existing(mock_db, mock_refresh_token):
 
 
 def test_get_refresh_token_by_user_id_found(mock_db, mock_refresh_token):
-    mock_db.query.return_value.filter.return_value.first.return_value = mock_refresh_token
+    mock_db.query.return_value.filter.return_value.first.return_value = (
+        mock_refresh_token)
 
     result = get_refresh_token_by_user_id(mock_db, mock_refresh_token.user_id)
 

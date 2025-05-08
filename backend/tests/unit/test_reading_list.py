@@ -33,22 +33,26 @@ def test_get_reading_list_by_user_email(mock_db, mock_reading_list_book):
 
 
 def test_get_reading_list_book_by_book_id(mock_db, mock_reading_list_book):
-    mock_db.query.return_value.filter.return_value.filter.return_value.first.return_value = mock_reading_list_book
+    mock_db.query.return_value.filter.return_value.\
+        filter.return_value.first.return_value = mock_reading_list_book
 
     result = get_reading_list_book_by_book_id(mock_db, "user@example.com", 1)
 
     assert result == mock_reading_list_book
-    mock_db.query.return_value.filter.return_value.filter.return_value.first.assert_called_once()
+    mock_db.query.return_value.filter.return_value.\
+        filter.return_value.first.assert_called_once()
 
 
 def test_get_reading_list_by_status(mock_db, mock_reading_list_book):
-    mock_db.query.return_value.filter.return_value.filter.return_value.all.return_value = [
-        mock_reading_list_book]
+    mock_db.query.return_value.filter.return_value.\
+        filter.return_value.all.return_value = [
+            mock_reading_list_book]
 
     result = get_reading_list_by_status(mock_db, "user@example.com", "want")
 
     assert result == [mock_reading_list_book]
-    mock_db.query.return_value.filter.return_value.filter.return_value.all.assert_called_once()
+    mock_db.query.return_value.filter.return_value.\
+        filter.return_value.all.assert_called_once()
 
 
 def test_create_reading_list_book(mock_db):
@@ -67,7 +71,8 @@ def test_create_reading_list_book(mock_db):
 
 
 def test_update_reading_list_book(mock_db, mock_reading_list_book):
-    mock_db.query.return_value.filter.return_value.filter.return_value.first.return_value = mock_reading_list_book
+    mock_db.query.return_value.filter.return_value.\
+        filter.return_value.first.return_value = mock_reading_list_book
 
     result = update_reading_list_book(
         mock_db, "user@example.com", 1, "reading")
@@ -78,7 +83,8 @@ def test_update_reading_list_book(mock_db, mock_reading_list_book):
 
 
 def test_delete_reading_list_book(mock_db, mock_reading_list_book):
-    mock_db.query.return_value.filter.return_value.filter.return_value.first.return_value = mock_reading_list_book
+    mock_db.query.return_value.filter.return_value.\
+        filter.return_value.first.return_value = mock_reading_list_book
 
     result = delete_reading_list_book(mock_db, "user@example.com", 1)
 
