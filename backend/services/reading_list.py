@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from core.reading_list import ReadingListBook
-from core.reading_list import get_reading_list_by_user_email, get_reading_list_book_by_book_id, get_reading_list_by_status, create_reading_list_book, update_reading_list_book
+from core.reading_list import get_reading_list_by_user_email, get_reading_list_book_by_book_id, get_reading_list_by_status, create_reading_list_book, update_reading_list_book, delete_reading_list_book
 
 
 from config import Config
@@ -58,4 +58,12 @@ class ReadingListService():
         else:
             return None
     
-        
+    def delete_reading_list_book_for_user(self, user_email: str, book_id: int, db: Session) -> ReadingListBook | None:
+        """
+        Deletes the reading list book for the user in the database.
+        """
+        response = delete_reading_list_book(db, user_email, book_id)
+        if response:
+            return response
+        else:
+            return None
