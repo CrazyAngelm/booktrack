@@ -1,8 +1,26 @@
-FROM python:3.11-bullseye
+
+FROM python:3.11-slim-bullseye AS base
 WORKDIR /app
+
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends build-essential \
+ && rm -rf /var/lib/apt/lists/*
+
+# Install Poetry
+RUN pip install --no-cache-dir poetry
+
+# Copy only pyproject.toml & lockfile for caching
+COPY pyproject.toml poetry.lock ./
+
+# Tell Poetry not to create a venv and install all deps (including dev)
+RUN poetry config virtualenvs.create false \
+ && poetry install --no-root --no-interaction --no-ansi
+
+# Copy the rest of the code
 COPY . .
-RUN pip3 install --no-cache-dir --upgrade pip
-RUN pip3 install -r requirements.txt
+
+RUN chmod +x run_backend.sh
+
 EXPOSE 8000
-RUN chmod +x run_server.sh
+
 CMD ["/bin/sh", "run_backend.sh"]
