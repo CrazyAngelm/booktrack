@@ -1,7 +1,7 @@
 import requests
 from sqlalchemy.orm import Session
 from core.favourites import Favourite
-from core.favourites import get_favourites_by_user_email, create_favourite
+from core.favourites import get_favourites_by_user_email, create_favourite, update_favourite
 
 
 from config import Config
@@ -28,4 +28,10 @@ class FavouritesService():
             return response
         else:
             return None
+        
+    def update_favourite_for_user(self, user_email: str, book_id: int, is_favourite: bool, db: Session) -> Favourite | None:
+        """
+        Updates the favourite for the user in the database.
+        """
+        update_favourite(db, user_email, book_id, is_favourite)
         
