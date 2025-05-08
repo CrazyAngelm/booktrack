@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from routers import users_router, catalog_router, favourites_router
+from routers import users_router, catalog_router, favourites_router, reading_list_router
 from exceptions import *
 from core import engine, Base
 
@@ -29,6 +29,8 @@ print("Tables created!")
 app.include_router(users_router)
 app.include_router(catalog_router)
 app.include_router(favourites_router)
+app.include_router(reading_list_router)
+
 # Add the exceptions handlers
 
 
