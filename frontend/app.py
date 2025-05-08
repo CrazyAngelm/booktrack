@@ -4,7 +4,7 @@ import streamlit as st
 import requests
 
 # Configuration
-API_BASE_URL = os.getenv('API_BASE_URL', 'http://localhost:8000/api/v1')
+API_BASE_URL = os.getenv('API_BASE_URL', 'http://localhost:8000/api')
 BYPASS_AUTH = os.getenv('BYPASS_AUTH', 'false').lower() == 'true'
 USE_FAKE_DATA = os.getenv('USE_FAKE_DATA', 'false').lower() == 'true'
 PER_PAGE = 20
@@ -216,9 +216,9 @@ def search_page():
         txt_col.markdown(f"Popularity: {b['popularity']}")
         txt_col.markdown(f"Excerpt: {b['excerpt']}")
         if act_col.button(
-            'Details', key=f'detail_{b['id']}',
+            'Details', key=f"detail_{b['id']}",
             on_click=set_selected_book, args=(b['id'],)
-        ):
+         ):
             return
 
     st.markdown('---')
@@ -249,8 +249,8 @@ def favourites_page():
         txt_col.markdown(f"**{f['title']}**  by {', '.join(f['authors'])}")
         txt_col.markdown(f"Popularity: {f['popularity']}")
         txt_col.markdown(f"Excerpt: {f['excerpt']}")
-        if rm_col.button('Remove', key=f'remove_{f['id']}'):
-            api_delete(f'/favourites/{f['id']}')
+        if rm_col.button('Remove', key=f"remove_{f['id']}"):
+            api_delete(f"/favourites/{f['id']}")
             return
 
 # Page: Reading List
@@ -277,7 +277,7 @@ def reading_list_page():
         txt_col.markdown(f"Excerpt: {r['excerpt']}")
         if act_col.button(
             'Details',
-            key=f'reading_{r['id']}',
+            key=f"reading_{r['id']}",
             on_click=set_selected_book,
             args=(r['id'],)
         ):

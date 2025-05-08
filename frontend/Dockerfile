@@ -9,4 +9,4 @@ COPY . .
 
 EXPOSE 8501
 
-ENTRYPOINT ["./run.sh"]
+ENTRYPOINT ["./run_frontend.sh"]

@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from routers import users_router, catalog_router
+from routers import users_router, catalog_router, favourites_router
 from exceptions import *
+from core import engine, Base
 
 
 load_dotenv()  # Load environmental variables
@@ -20,10 +21,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Create the database tables
+Base.metadata.create_all(bind=engine)
+print("Tables created!")
+
 # Include the routers
 app.include_router(users_router)
 app.include_router(catalog_router)
-
+app.include_router(favourites_router)
 # Add the exceptions handlers
 
 
