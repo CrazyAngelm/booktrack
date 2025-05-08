@@ -1,314 +1,477 @@
 import os
-import random
 import streamlit as st
 import requests
+from datetime import datetime
 
 # Configuration
 API_BASE_URL = os.getenv('API_BASE_URL', 'http://localhost:8000/api')
-BYPASS_AUTH = os.getenv('BYPASS_AUTH', 'false').lower() == 'true'
-USE_FAKE_DATA = os.getenv('USE_FAKE_DATA', 'false').lower() == 'true'
-PER_PAGE = 20
+PER_PAGE = int(os.getenv('PER_PAGE', 20))
+REQUEST_TIMEOUT = 60  # seconds
 
-# Demo cover images
-COVER_URLS = [
-    'https://covers.openlibrary.org/b/id/8231856-L.jpg',
-    'https://covers.openlibrary.org/b/id/8319256-L.jpg',
-    'https://covers.openlibrary.org/b/id/8074151-L.jpg',
-    'https://covers.openlibrary.org/b/id/8522721-L.jpg',
-    'https://covers.openlibrary.org/b/id/8091016-L.jpg',
-    'https://covers.openlibrary.org/b/id/8281994-L.jpg',
-    'https://covers.openlibrary.org/b/id/10279816-L.jpg',
-    'https://covers.openlibrary.org/b/id/10013571-L.jpg',
-    'https://covers.openlibrary.org/b/id/8314150-L.jpg',
-    'https://covers.openlibrary.org/b/id/8773951-L.jpg'
-]
+# Use a persistent session for connection pooling
+session = requests.Session()
 
-# Fake data setup
-if USE_FAKE_DATA:
-    FAKE_BOOKS = []
-    for i in range(1, 51):
-        FAKE_BOOKS.append({
-            'id': i,
-            'title': f'Sample Book {i}',
-            'authors': [f'Author {i}'],
-            'excerpt':
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-            'cover_url': COVER_URLS[(i-1) % len(COVER_URLS)],
-            'popularity': random.randint(1, 100)
-        })
-    FAKE_BOOKS.sort(key=lambda b: b['popularity'], reverse=True)
-    FAKE_DETAILS = {
-        b['id']: {
-            'id': b['id'],
-            'title': b['title'],
-            'authors': b['authors'],
-            'cover_url': b['cover_url'],
-            'description': f'''Full description for
-            {b["title"]}.
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.''',
-            'rating': round(random.uniform(1, 5), 1)
-        }
-        for b in FAKE_BOOKS
-    }
-    FAKE_FAV = [
-        FAKE_BOOKS[i] for i in random.sample(range(len(FAKE_BOOKS)), 10)
-    ]
-    FAKE_RL = [
-        {**FAKE_BOOKS[1], 'status': 'Reading'},
-        {**FAKE_BOOKS[3], 'status': 'Want'},
-        {**FAKE_BOOKS[4], 'status': 'Read'}
-    ]
+# Initialize session state
+for key, default in {
+    'access_token': None,
+    'refresh_token': None,
+    'token_expiry': None,
+    'user_email': None,
+    'selected_book': None,
+    'search_page': 1,
+    'filter_status': 'All',
+    'sort_order': 'Most downloaded'
+}.items():
+    st.session_state.setdefault(key, default)
 
-# Initialize session state defaults
-st.session_state.setdefault('token', 'demo')
-st.session_state.setdefault('search_page', 1)
-st.session_state.setdefault('selected_book', None)
+# --- Utility functions ---
+def clear_auth():
+    for k in ['access_token', 'refresh_token', 'token_expiry', 'user_email']:
+        st.session_state[k] = None
 
+def get_headers():
+    headers = {'Content-Type': 'application/json'}
+    token = st.session_state.get('access_token')
+    if token:
+        headers['Authorization'] = f"Bearer {token}"
+    return headers
 
-# API helper functions
-def api_get(path, params=None):
-    if USE_FAKE_DATA:
-        # List
-        if path == '/books/' and params is not None:
-            page = params.get('page', 1)
-            start = (page - 1) * PER_PAGE
-            end = start + PER_PAGE
-            return {
-                'results': FAKE_BOOKS[start:end],
-                'total_pages': (len(FAKE_BOOKS) + PER_PAGE - 1) // PER_PAGE
-            }
-        # Details
-        if path.startswith('/books/'):
-            bid = int(path.rsplit('/', 1)[1])
-            return FAKE_DETAILS.get(bid)
-        if path == '/favourites/':
-            return FAKE_FAV
-        if path == '/reading-list/':
-            return FAKE_RL
-    resp = requests.get(
-        f"{API_BASE_URL}{path}", params=params or {}, headers={}
+def refresh_access_token():
+    rt = st.session_state.get('refresh_token')
+    if not rt:
+        return False
+    resp = session.post(
+        f"{API_BASE_URL}/refresh-token",
+        json={'refresh_token': rt},
+        timeout=REQUEST_TIMEOUT
     )
-    return resp.json() if resp.ok else {}
-
-
-def api_post(path, json=None):
-    if USE_FAKE_DATA and path == '/favourites/':
-        FAKE_FAV.append(FAKE_DETAILS.get(json['book_id']))
+    if resp.status_code == 200:
+        data = resp.json()
+        st.session_state['access_token'] = data['access_token']
+        st.session_state['token_expiry'] = data.get('expires_in')
         return True
-    resp = requests.post(f"{API_BASE_URL}{path}", json=json or {}, headers={})
-    return resp.ok
+    else:
+        clear_auth()
+        return False
 
+def api_request(method, path, params=None, json_data=None):
+    url = f"{API_BASE_URL}{path}"
+    headers = get_headers()
+    try:
+        resp = session.request(
+            method, url,
+            params=params or {},
+            json=json_data or {},
+            headers=headers,
+            timeout=REQUEST_TIMEOUT
+        )
+    except requests.RequestException as e:
+        st.error(f"Network error: {e}")
+        return None
 
-def api_put(path, json=None):
-    if USE_FAKE_DATA and path.startswith('/reading-list/'):
-        bid = int(path.rsplit('/', 1)[1])
-        for r in FAKE_RL:
-            if r['id'] == bid:
-                r['status'] = json['status']
-                return True
-        FAKE_RL.append({**FAKE_DETAILS[bid], 'status': json['status']})
+    if resp.status_code == 401:
+        if refresh_access_token():
+            headers = get_headers()
+            resp = session.request(
+                method, url,
+                params=params or {},
+                json=json_data or {},
+                headers=headers,
+                timeout=REQUEST_TIMEOUT
+            )
+        else:
+            st.error('Session expired. Please log in again.')
+            clear_auth()
+            return None
+
+    if resp.ok:
+        try:
+            return resp.json()
+        except ValueError:
+            return None
+    else:
+        detail = ''
+        try:
+            detail = resp.json().get('detail', '')
+        except ValueError:
+            detail = resp.text
+        st.error(f"Error [{resp.status_code}]: {detail}")
+        return None
+
+# --- Caching for performance ---
+@st.cache_data(ttl=300)
+def fetch_books(page, query, sort_order):
+    if query:
+        params = {'query': query, 'page_no': page, 'page_size': PER_PAGE}
+        data = api_request('GET', '/books/search', params=params) or []
+    else:
+        params = {'page_no': page, 'page_size': PER_PAGE}
+        data = api_request('GET', '/books', params=params) or []
+    if isinstance(data, list):
+        reverse = sort_order == 'Most downloaded'
+        return sorted(data, key=lambda x: x.get('download_count', 0), reverse=reverse)
+    return []
+
+@st.cache_data(ttl=300)
+def fetch_book_details(book_id):
+    return api_request('GET', f'/books/book-id/{book_id}')
+
+@st.cache_data(ttl=300)
+def fetch_favourites():
+    return api_request('GET', '/favourites') or {}
+
+@st.cache_data(ttl=300)
+def fetch_reading_list():
+    return api_request('GET', '/reading-list') or {}
+
+# --- Authentication flows ---
+def login(email, password):
+    try:
+        resp = session.post(
+            f"{API_BASE_URL}/login",
+            json={'email': email, 'password': password},
+            timeout=REQUEST_TIMEOUT
+        )
+    except requests.RequestException as e:
+        st.error(f"Network error: {e}")
+        return False
+
+    if resp.status_code == 200:
+        data = resp.json()
+        st.session_state.update({
+            'access_token': data['access_token'],
+            'refresh_token': data['refresh_token'],
+            'token_expiry': data.get('expires_in'),
+            'user_email': email
+        })
         return True
-    resp = requests.put(f"{API_BASE_URL}{path}", json=json or {}, headers={})
-    return resp.ok
+    else:
+        detail = ''
+        try:
+            detail = resp.json().get('detail', '')
+        except ValueError:
+            detail = resp.text
+        st.error(f"Login failed: {detail}")
+        return False
 
+def register(name, surname, email, password):
+    try:
+        resp = session.post(
+            f"{API_BASE_URL}/register",
+            json={'name': name, 'surname': surname, 'email': email, 'password': password},
+            timeout=REQUEST_TIMEOUT
+        )
+    except requests.RequestException as e:
+        st.error(f"Network error: {e}")
+        return False
 
-def api_delete(path):
-    if USE_FAKE_DATA:
-        bid = int(path.rsplit('/', 1)[1])
-        if path.startswith('/favourites/'):
-            FAKE_FAV[:] = [f for f in FAKE_FAV if f['id'] != bid]
-        if path.startswith('/reading-list/'):
-            FAKE_RL[:] = [r for r in FAKE_RL if r['id'] != bid]
+    if resp.status_code in (200, 201):
+        st.success('Registration successful! You can now log in.')
         return True
-    resp = requests.delete(f"{API_BASE_URL}{path}", headers={})
-    return resp.ok
+    else:
+        detail = ''
+        try:
+            detail = resp.json().get('detail', '')
+        except ValueError:
+            detail = resp.text
+        st.error(f"Registration failed: {detail}")
+        return False
 
+def logout():
+    rt = st.session_state.get('refresh_token')
+    if rt:
+        try:
+            session.post(
+                f"{API_BASE_URL}/logout",
+                json={'refresh_token': rt},
+                headers=get_headers(),
+                timeout=REQUEST_TIMEOUT
+            )
+        except requests.RequestException:
+            pass
+    clear_auth()
 
-# State management callbacks
-def clear_details():
+# --- UI Pages ---
+def auth_page():
+    st.title('📚 BookTrack')
+    tabs = st.tabs(['🔑 Login', '📝 Register'])
+    with tabs[0]:
+        email = st.text_input('Email', key='login_email')
+        pwd = st.text_input('Password', type='password', key='login_pwd')
+        if st.button('Login'):
+            if login(email, pwd):
+                st.success('Logged in!')
+    with tabs[1]:
+        fn = st.text_input('First Name', key='reg_name')
+        ln = st.text_input('Surname', key='reg_surname')
+        email_r = st.text_input('Email', key='reg_email')
+        pwd1 = st.text_input('Password', type='password', key='reg_pwd1')
+        pwd2 = st.text_input('Confirm Password', type='password', key='reg_pwd2')
+        if st.button('Register'):
+            if pwd1 != pwd2:
+                st.error('Passwords do not match')
+            else:
+                register(fn, ln, email_r, pwd1)
+
+def clear_selection():
     st.session_state['selected_book'] = None
 
-
-def set_selected_book(book_id):
+def set_selection(book_id):
     st.session_state['selected_book'] = book_id
 
-
-# Page: Details view
 def details_page():
     bid = st.session_state['selected_book']
-    book = api_get(f'/books/{bid}')
-    if not book:
-        st.error('Unable to load book details.')
-        clear_details()
+    data = fetch_book_details(bid)
+    if not data:
+        st.error("Unable to load details.")
+        st.session_state['selected_book'] = None
         return
 
-    if st.button(
-        '← Back to List', key=f'back_btn_top_{bid}', on_click=clear_details
-    ):
-        return
-
-    st.write('---')
-    col1, col2 = st.columns([1, 2], gap='medium')
-    with col1:
-        st.image(book['cover_url'], width=240)
-    with col2:
-        st.header(book['title'])
-        st.subheader('Authors')
-        st.write(', '.join(book['authors']))
-        st.subheader('Rating')
-        st.write(f"{book.get('rating', 'N/A')} ⭐️")
-        st.subheader('Description')
-        st.write(book.get('description', 'No description available.'))
-
-        # Favourites toggle
-        favs = api_get('/favourites/')
-        is_fav = any(f['id'] == bid for f in favs)
-        label = 'Remove from Favourites' if is_fav else 'Add to Favourites'
-        if st.button(label, key=f'fav_btn_{bid}'):
-            if is_fav:
-                api_delete(f'/favourites/{bid}')
-            else:
-                api_post('/favourites/', {'book_id': bid})
+    # — Header: Title & Back Button —
+    # — Actions: Favourites & Reading List —
+    title_col, fav_col, rl_col, back_col = st.columns([8, 1.5, 1.5, 1], gap="small", vertical_alignment="bottom")
+    with title_col:
+        st.title(data.get('title', ''))
+    with back_col:
+        if st.button("← Back", key=f"back_{bid}", on_click=clear_selection):
             return
 
-        # Reading status
-        rl = api_get('/reading-list/')
-        current = next((r['status'] for r in rl if r['id'] == bid), None)
-        options = ['None', 'Want', 'Reading', 'Read']
-        selection = st.selectbox(
-            'Reading Status',
-            options,
-            index=options.index(current) if current in options else 0
+    st.markdown("---")
+
+    # Favourite toggle
+    fav_ids = [f['book_id'] for f in fetch_favourites().get('favourites', [])]
+    is_fav = bid in fav_ids
+    with fav_col:
+        if st.button(
+            "💔 Remove Favourite" if is_fav else "❤️ Add Favourite",
+            use_container_width=True
+        ):
+            api_request(
+                'PUT', f"/favourites/book-id/{bid}",
+                params={'is_favourite': not is_fav}
             )
-        if st.button('Update Status', key=f'upd_btn_{bid}'):
-            if selection != 'None':
-                api_put(f'/reading-list/{bid}', {'status': selection})
-            else:
-                api_delete(f'/reading-list/{bid}')
+            fetch_favourites.clear()
             return
 
-    st.write('---')
-    if st.button(
-        '← Back to List', key=f'back_btn_bottom_{bid}', on_click=clear_details
-    ):
-        return
+    # Reading-status selectbox with immediate update
+    def _on_status_change():
+        new_status = st.session_state[f"reading_status_{bid}"]
+        # fetch existing entry (ignore 404)
+        entry = None
+        resp = session.get(
+            f"{API_BASE_URL}/reading-list/book-id/{bid}",
+            headers=get_headers(), timeout=REQUEST_TIMEOUT
+        )
+        if resp.status_code == 200:
+            entry = resp.json()
+        # apply change
+        if new_status == 'None':
+            if entry:
+                session.delete(
+                    f"{API_BASE_URL}/reading-list/book-id/{bid}",
+                    headers=get_headers(), timeout=REQUEST_TIMEOUT
+                )
+        else:
+            if entry:
+                api_request(
+                    'PUT', f"/reading-list/book-id/{bid}",
+                    params={'status': new_status}
+                )
+            else:
+                api_request(
+                    'POST', "/reading-list",
+                    params={'book_id': bid, 'status': new_status}
+                )
+        fetch_reading_list.clear()
 
+    # determine current status
+    entry = None
+    resp = session.get(
+        f"{API_BASE_URL}/reading-list/book-id/{bid}",
+        headers=get_headers(), timeout=REQUEST_TIMEOUT
+    )
+    if resp.status_code == 200:
+        entry = resp.json()
+    current = entry.get('status') if entry else 'None'
+    options = ['None', 'Want', 'Reading', 'Read']
 
-# Page: Search & Discover
+    with rl_col:
+        st.selectbox(
+            "Reading Status",
+            options,
+            index=options.index(current),
+            key=f"reading_status_{bid}",
+            on_change=_on_status_change,
+            help="Select to add/update/remove from your reading list",
+            
+            
+        )
+
+    # — Book Metadata —
+    img_col, info_col = st.columns([1, 2], gap="medium")
+    cover = data.get('formats', {}).get('image/jpeg')
+    if cover:
+        img_col.image(cover, width=220)
+    with info_col:
+        st.subheader("Authors")
+        for a in data.get('authors', []):
+            yrs = f"{a.get('birth_year','')}–{a.get('death_year','')}"
+            st.write(f"{a.get('name','')} ({yrs})")
+
+        st.subheader("Summary")
+        summary = (data.get('summaries') or ["No summary available"])[0]
+        st.write(summary)
+
+        st.subheader("Download Count")
+        st.write(data.get('download_count', 0))
+
+        st.subheader("Subjects")
+        st.write(", ".join(data.get('subjects', [])))
+
+        st.subheader("Languages / Media")
+        langs = ", ".join(data.get('languages', []))
+        media = data.get('media_type', '')
+        st.write(f"{langs}  |  {media}")
+
+    st.markdown("---")
+
+ 
+
 
 def search_page():
-    st.header('Discover Books')
-    col1, col2 = st.columns([2, 1], gap='small', vertical_alignment='bottom')
-    query = col1.text_input('Search by title or author')
-    if col2.button('Search', key='search_button'):
+    st.header('🔍 Discover')
+    s1, s2, _, s3 = st.columns([4, 2, 4, 2], vertical_alignment='bottom')
+    query = s1.text_input('Search by title or author', key='search_query')
+    if s2.button('Search'):
         st.session_state['search_page'] = 1
-
-    page = st.session_state['search_page']
-    data = api_get('/books/', {'search': query, 'page': page})
-    # empty space
+    sort = s3.selectbox('Sort', ['Most downloaded', 'Least downloaded'], key='sort_order')
+    books = fetch_books(st.session_state['search_page'], query, sort)
     st.markdown('---')
-    for b in data.get('results', []):
-        img_col, txt_col, act_col = st.columns(
-            [1, 4, 1], gap='medium', vertical_alignment='center'
-        )
-        img_col.image(b['cover_url'], width=140)
-        txt_col.markdown(f"**{b['title']}**  by {', '.join(b['authors'])}")
-        txt_col.markdown(f"Popularity: {b['popularity']}")
-        txt_col.markdown(f"Excerpt: {b['excerpt']}")
-        if act_col.button(
-            'Details', key=f"detail_{b['id']}",
-            on_click=set_selected_book, args=(b['id'],)
-         ):
+    for b in books:
+        img = b.get('formats', {}).get('image/jpeg')
+        title = b.get('title', 'No title')
+        auths = ', '.join([a.get('name') for a in b.get('authors', [])])
+        # safe summary
+        summaries = b.get('summaries') or ['']
+        desc = summaries[0]
+        desc = desc[:200] + '...' if len(desc) > 200 else desc
+        dl = b.get('download_count', 0)
+        langs = ', '.join(b.get('languages', []))
+        cols = st.columns([1, 4, 2], vertical_alignment='center')
+        if img:
+            cols[0].image(img, width=100)
+        cols[1].markdown(f"**{title}** by {auths}")
+        cols[1].write(desc)
+        cols[1].write(f"Downloads: {dl} | Languages: {langs}")
+        if cols[2].button('Details', key=f"d{b.get('id')}", on_click=set_selection, args=(b.get('id'),)):
             return
+    def _prev():
+        if st.session_state['search_page'] > 1:
+            st.session_state['search_page'] -= 1
 
-    st.markdown('---')
-    p1, p2, p3 = st.columns([1, 1, 1], vertical_alignment='center')
-    if p1.button(
-        'Previous', key='prev_page', use_container_width=True
-    ) and page > 1:
-        st.session_state['search_page'] = page - 1
-    p2.markdown(f"""<h5 style='text-align: center;'>
-                Page {page} of {
-                    data.get('total_pages', 1)
-                }</h5>""", unsafe_allow_html=True)
-    if p3.button(
-        'Next', key='next_page', use_container_width=True
-    ) and page < data.get('total_pages', 1):
-        st.session_state['search_page'] = page + 1
+    def _next():
+        st.session_state['search_page'] += 1
 
-# Page: Favourites
+    p1, p2, p3 = st.columns([1,1,1])
+    p1.button('← Previous', key='search_prev', on_click=_prev)
+    p2.markdown(f"Page {st.session_state['search_page']}", unsafe_allow_html=True)
+    # only show “Next” when we got a full page of results
 
+    p3.button('Next →', key='search_next', on_click=_next)
 
 def favourites_page():
-    st.header('My Favourites')
-    for f in api_get('/favourites/'):
-        img_col, txt_col, rm_col = st.columns(
-            [1, 4, 1], gap='medium', vertical_alignment='center'
-        )
-        img_col.image(f['cover_url'], width=140)
-        txt_col.markdown(f"**{f['title']}**  by {', '.join(f['authors'])}")
-        txt_col.markdown(f"Popularity: {f['popularity']}")
-        txt_col.markdown(f"Excerpt: {f['excerpt']}")
-        if rm_col.button('Remove', key=f"remove_{f['id']}"):
-            api_delete(f"/favourites/{f['id']}")
+    st.header('❤️ Favourites')
+    st.markdown('---')
+    favs = fetch_favourites().get('favourites', [])
+    for f in favs:
+        bid = f['book_id']
+        b = fetch_book_details(bid)
+        if not b:
+            continue
+        img = b.get('formats', {}).get('image/jpeg')
+        title = b.get('title', 'No title')
+        auths = ', '.join([a.get('name') for a in b.get('authors', [])])
+        summaries = b.get('summaries') or ['']
+        desc = summaries[0]
+        desc = desc[:150] + '...' if len(desc) > 150 else desc
+        dl = b.get('download_count', 0)
+        langs = ', '.join(b.get('languages', []))
+        cols = st.columns([1, 4, 1])
+        if img:
+            cols[0].image(img, width=100)
+        cols[1].markdown(f"**{title}** by {auths}")
+        cols[1].write(desc)
+        cols[1].write(f"Downloads: {dl} | Languages: {langs}")
+        if cols[2].button('Remove', key=f"rm{bid}"):
+            api_request('PUT', f'/favourites/book-id/{bid}', params={'is_favourite': False})
+            fetch_favourites.clear()
             return
-
-# Page: Reading List
-
 
 def reading_list_page():
-    c1, c2, c3 = st.columns(
-        [8, 1, 1], gap='small', vertical_alignment='bottom'
-    )
-    c1.header('My Reading List')
-    status_filter = c2.selectbox(
-        'Filter', ['All', 'Want', 'Reading', 'Read'], key='filter_status'
-    )
-    for r in api_get('/reading-list/'):
-        if status_filter != 'All' and r['status'] != status_filter:
+
+    s1, s2 = st.columns([8, 2], vertical_alignment='center')
+    s1.header('📖 Reading List')
+    status = s2.selectbox('Filter', ['All', 'Want', 'Reading', 'Read'], key='filter_status')
+    st.markdown('---')
+    rl = fetch_reading_list().get('reading_list', [])
+    for r in rl:
+        if status != 'All' and r['status'] != status:
             continue
-        img_col, txt_col, act_col = st.columns(
-            [1, 4, 1], gap='medium', vertical_alignment='center'
-        )
-        img_col.image(r['cover_url'], width=140)
-        txt_col.markdown(f"**{r['title']}** \u2014 Status: {r['status']}")
-        txt_col.markdown(f"by {', '.join(r['authors'])}")
-        txt_col.markdown(f"Popularity: {r['popularity']}")
-        txt_col.markdown(f"Excerpt: {r['excerpt']}")
-        if act_col.button(
-            'Details',
-            key=f"reading_{r['id']}",
-            on_click=set_selected_book,
-            args=(r['id'],)
-        ):
+        bid = r['book_id']
+        b = fetch_book_details(bid)
+        if not b:
+            continue
+        img = b.get('formats', {}).get('image/jpeg')
+        title = b.get('title', 'No title')
+        summaries = b.get('summaries') or ['']
+        desc = summaries[0]
+        desc = desc[:150] + '...' if len(desc) > 150 else desc
+        dl = b.get('download_count', 0)
+        cols = st.columns([1, 4, 1])
+        if img:
+            cols[0].image(img, width=100)
+        cols[1].markdown(f"**{title}** — {r['status']}")
+        cols[1].write(desc)
+        cols[1].write(f"Downloads: {dl}")
+        if cols[2].button('Details', key=f"rl{bid}", on_click=set_selection, args=(bid,)):
             return
 
-# Page: Dashboard
-
-
 def dashboard_page():
-    st.header('Dashboard')
-    rl = api_get('/reading-list/')
+    st.header('📊 Dashboard')
+    rl = fetch_reading_list().get('reading_list', [])
     reading = sum(1 for r in rl if r['status'] == 'Reading')
     completed = sum(1 for r in rl if r['status'] == 'Read')
-    favs = api_get('/favourites/')
-    recent = favs[-1]['title'] if favs else 'None'
+    favs = fetch_favourites().get('favourites', [])
+    recent = 'None'
+    if favs:
+        bid = favs[-1]['book_id']
+        b = fetch_book_details(bid)
+        recent = b.get('title') if b else 'Unknown'
     c1, c2, c3 = st.columns(3)
-    c1.metric('Currently Reading', reading)
+    c1.metric('Reading', reading)
     c2.metric('Completed', completed)
     c3.metric('Recent Favourite', recent)
 
-# Main
-
-
+# --- Main Setup ---
 st.set_page_config(page_title='BookTrack', layout='wide')
 
-# Show details if a book is selected
+# Authentication
+if not st.session_state['access_token']:
+    auth_page()
+    st.stop()
+
+# Sidebar: user & logout
+st.sidebar.markdown(f"**User:** {st.session_state['user_email']}")
+if st.sidebar.button('Logout'):
+    logout()
+    st.experimental_rerun()
+
+# Details view
 if st.session_state['selected_book'] is not None:
     details_page()
     st.stop()
 
-# Otherwise show tabs
+# Main tabs
 tabs = st.tabs(['Search', 'Favourites', 'Reading List', 'Dashboard'])
 with tabs[0]:
     search_page()
