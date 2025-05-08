@@ -30,6 +30,6 @@ class Config(metaclass=Singleton):
 
     def get_refresh_token_expire_minutes(self):
         return int(self.conf["auth"]["refresh_token"]["expiration"])
-    
+
     def get_gutendex_base_url(self):
         return self.conf["general"]["gutendex_base_url"]
