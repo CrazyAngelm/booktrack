@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-import uuid
+import datetime
 
 from .models import Favourite
 
@@ -14,7 +14,8 @@ def get_favourite_by_book_id(db: Session, book_id: int) -> Favourite | None:
 def create_favourite(db: Session, user_email: str, book_id: int) -> Favourite:
     db_favourite = Favourite(
         user_email=user_email,
-        book_id=book_id
+        book_id=book_id,
+        created_at=datetime.datetime.now(),
     )
 
     db.add(db_favourite)
