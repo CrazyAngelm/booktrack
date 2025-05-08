@@ -37,6 +37,8 @@ def update_favourite(db: Session, user_email: str, book_id: int, is_favourite: b
     else:
         if is_favourite == True:
             db_favourite = create_favourite(db, user_email, book_id)
+    
+    print(f"Updated favourite for user {user_email} and book {book_id} to {is_favourite}")
 
     
 
