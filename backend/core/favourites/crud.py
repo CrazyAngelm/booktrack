@@ -8,8 +8,8 @@ def get_favourites_by_user_email(db: Session, user_email: str) -> list[Favourite
     return db.query(Favourite).filter(Favourite.user_email == user_email).all()
 
 
-def get_favourite_by_book_id(db: Session, book_id: int) -> Favourite | None:
-    return db.query(Favourite).filter(Favourite.book_id == book_id).first()
+def get_favourite_by_book_id(db: Session, user_email: str, book_id: int) -> Favourite | None:
+    return db.query(Favourite).filter(Favourite.user_email == user_email).filter(Favourite.book_id == book_id).first()
 
 def create_favourite(db: Session, user_email: str, book_id: int) -> Favourite:
     db_favourite = Favourite(
