@@ -23,7 +23,7 @@ def fetch_favourites_for_user_endpoint(
     return {"user_email": user.email, "favourites": result}
 
 
-@favourites_router.get("/api/favourites/{book_id}", response_model=FavouriteRead, status_code=200)
+@favourites_router.get("/api/favourites/book-id/{book_id}", response_model=FavouriteRead, status_code=200)
 def fetch_favourite_for_user_endpoint(
     book_id: int,
     user: AuthenticatedUser = Depends(get_user),
@@ -41,12 +41,17 @@ def create_favourite_endpoint(
     user: AuthenticatedUser = Depends(get_user),
     db: Session = Depends(get_db)
 ):
+    # Check duplicate
+    existing_favourite = favourites_service.fetch_favourite_for_user(user.email, book_id, db)
+    if existing_favourite:
+        raise HTTPException(status_code=400, detail="Book already exists in the favourites")
+    
     result = favourites_service.create_favourite_for_user(user.email, book_id, db)
     if not result:
         raise HTTPException(status_code=401, detail="Failed to create favourite")
     return result
 
-@favourites_router.patch("/api/favourites", response_model=dict, status_code=200)
+@favourites_router.put("/api/favourites/book-id/{book_id}", response_model=dict, status_code=200)
 def update_favourite_endpoint(
     book_id: int,
     is_favourite: bool,
