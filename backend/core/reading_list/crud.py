@@ -40,4 +40,9 @@ def update_reading_list_book(db: Session, user_email: str, book_id: int, status:
     return db_reading_list_book
 
     
-
+def delete_reading_list_book(db: Session, user_email: str, book_id):
+    db_reading_list_book = db.query(ReadingListBook).filter(ReadingListBook.user_email == user_email).filter(ReadingListBook.book_id == book_id).first()
+    if db_reading_list_book:
+        db.delete(db_reading_list_book)
+        db.commit()
+    return db_reading_list_book

@@ -86,3 +86,19 @@ def add_book_to_reading_list_endpoint(
     if not result:
         raise HTTPException(status_code=401, detail="Book was not added successfully")
     return result
+
+
+@reading_list_router.delete("/api/reading-list/book-id/{book_id}", response_model=ReadingListBookRead, status_code=200)
+def delete_book_from_reading_list_endpoint(
+    book_id: int,
+    user: AuthenticatedUser = Depends(get_user),
+    db: Session = Depends(get_db),
+):
+    # Check if book exists
+    existing_book = reading_list_service.fetch_reading_list_book_for_user(user.email, book_id, db)
+    if not existing_book:
+        raise HTTPException(status_code=404, detail="Book not found in the reading list")
+    result = reading_list_service.delete_reading_list_book_for_user(user.email, book_id, db)
+    if not result:
+        raise HTTPException(status_code=401, detail="Book was not deleted successfully")
+    return result
