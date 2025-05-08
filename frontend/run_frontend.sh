@@ -7,5 +7,3 @@ if [ -f .env ]; then
 fi
 
 streamlit run app/main.py --server.port ${PORT:-8501}
-
-chmod +x run.sh
