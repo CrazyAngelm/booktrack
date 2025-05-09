@@ -1,5 +1,3 @@
-#!/bin/sh
-
 if [ ! -d "tmp" ]; then
     mkdir tmp
     chmod -R 777 tmp
