@@ -2,10 +2,12 @@ import enum
 from sqlalchemy import Column, Integer, String
 from core import Base
 
+
 class ReadingStatus(str, enum.Enum):
     WANT = "Want"
     READING = "Reading"
     READ = "Read"
+
 
 class ReadingListBook(Base):
     __tablename__ = "reading_list_books"

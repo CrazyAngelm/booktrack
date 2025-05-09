@@ -11,12 +11,14 @@ config = Config()
 def get_user_from_token(token: str):
     try:
         payload = jwt.decode(
-            token, config.get_secret_key(), algorithms=[config.get_jwt_algorithm()]
+            token, config.get_secret_key(), 
+            algorithms=[config.get_jwt_algorithm()]
         )
         user_id = payload.get("id")
         if user_id is None:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
+                status_code=status.HTTP_401_UNAUTHORIZED, 
+                detail="Invalid token"
             )
         payload["email"] = payload.pop("sub")
         payload["has_logged_in"] = True

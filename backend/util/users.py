@@ -43,9 +43,12 @@ def login(request: LoginRequest, db: Session):
 def register(user: UserCreate, db: Session):
     db_user_email = get_user_by_email(db, email=user.email)
     if db_user_email:
-        raise HTTPException(status_code=409, detail="The email is already registered")
+        raise HTTPException(
+            status_code=409, 
+            detail="The email is already registered"
+        )
 
-    salt = bcrypt.gensalt()
+    salt = bcrypt.gensalt(rounds=12)
     hashed_password = bcrypt.hashpw(user.password.encode(), salt).decode()
     new_user = User(
         name=user.name,
@@ -75,5 +78,3 @@ def logout(db: Session, refresh_token: str):
     db.commit()
 
     return {"detail": "Successfully logged out"}
-
-

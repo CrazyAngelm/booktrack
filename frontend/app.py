@@ -27,9 +27,11 @@ for key, default in {
     st.session_state.setdefault(key, default)
 
 # --- Utility functions ---
+
 def clear_auth():
     for k in ['access_token', 'refresh_token', 'token_expiry', 'user_email']:
         st.session_state[k] = None
+
 
 def get_headers():
     headers = {'Content-Type': 'application/json'}
@@ -37,6 +39,7 @@ def get_headers():
     if token:
         headers['Authorization'] = f"Bearer {token}"
     return headers
+
 
 def refresh_access_token():
     rt = st.session_state.get('refresh_token')
@@ -55,6 +58,7 @@ def refresh_access_token():
     else:
         clear_auth()
         return False
+
 
 def api_request(method, path, params=None, json_data=None):
     url = f"{API_BASE_URL}{path}"
@@ -114,17 +118,21 @@ def fetch_books(page, query, sort_order):
         return sorted(data, key=lambda x: x.get('download_count', 0), reverse=reverse)
     return []
 
+
 @st.cache_data(ttl=300)
 def fetch_book_details(book_id):
     return api_request('GET', f'/books/book-id/{book_id}')
+
 
 @st.cache_data(ttl=300)
 def fetch_favourites():
     return api_request('GET', '/favourites') or {}
 
+
 @st.cache_data(ttl=300)
 def fetch_reading_list():
     return api_request('GET', '/reading-list') or {}
+
 
 # --- Authentication flows ---
 def login(email, password):
@@ -164,6 +172,7 @@ def login(email, password):
         st.error(f"Login failed: {detail}")
         return False
 
+
 def register(name, surname, email, password):
     try:
         resp = session.post(
@@ -186,6 +195,7 @@ def register(name, surname, email, password):
             detail = resp.text
         st.error(f"Registration failed: {detail}")
         return False
+
 
 def logout():
     rt = st.session_state.get('refresh_token')
@@ -261,11 +271,14 @@ def auth_page():
                     detail = resp.json().get('detail', resp.text)
                     st.error(f"Registration failed: {detail}")
 
+
 def clear_selection():
     st.session_state['selected_book'] = None
 
+
 def set_selection(book_id):
     st.session_state['selected_book'] = book_id
+
 
 def details_page():
     bid = st.session_state['selected_book']
@@ -289,6 +302,8 @@ def details_page():
     # Favourite toggle
     fav_ids = [f['book_id'] for f in fetch_favourites().get('favourites', [])]
     is_fav = bid in fav_ids
+    
+    
     def _toggle_fav():
         api_request(
             'PUT', f"/favourites/book-id/{bid}",
@@ -303,6 +318,7 @@ def details_page():
             on_click=_toggle_fav
         )
 
+    
     # Reading-status selectbox with immediate update
     def _on_status_change():
         new_status = st.session_state[f"reading_status_{bid}"]
@@ -385,8 +401,6 @@ def details_page():
 
     st.markdown("---")
 
- 
-
 
 def search_page():
     st.header('🔍 Discover')
@@ -428,6 +442,7 @@ def search_page():
     # only show “Next” when we got a full page of results
 
     p3.button('Next →', key='search_next', on_click=_next)
+
 
 def favourites_page():
     st.header('❤️ Favourites')
@@ -486,6 +501,7 @@ def reading_list_page():
         if cols[3].button('Details', key=f"rl{bid}", on_click=set_selection, args=(bid,), use_container_width=True):
             return
 
+
 def dashboard_page():
     st.header('📊 Dashboard')
 
@@ -525,9 +541,6 @@ def dashboard_page():
         "Count": [want, reading, completed]
     })
 
-    # Beautiful colors: Green, Blue, Yellow
-    bar_colors = ["#4CAF50", "#2196F3", "#FFEB3B"]  # Green, Blue, Yellow
-
     c1, c2, _ = st.columns([6, 3, 3], gap="small", vertical_alignment="top")
     c2.line_chart(
         df.set_index("Status"),
@@ -536,8 +549,6 @@ def dashboard_page():
         color="#FFEB3B"  # Apply custom colors
     )
     c1.metric("⭐ Most Recent Favourite", recent)
-
-
 
 
 # --- Main Setup ---
@@ -561,7 +572,7 @@ if st.session_state['access_token'] is None:
     
 
 # 2) Once here, we know the user is logged in—show a top bar instead of sidebar.
-top_col, logout_col = st.columns([9,1])
+top_col, logout_col = st.columns([9, 1])
 
 top_col.write(f"### **Welcome**, &nbsp; *{st.session_state['user_email']}*")
 

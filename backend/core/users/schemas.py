@@ -31,4 +31,3 @@ class AuthenticatedUser(BaseModel):
 class AccessToken(BaseModel):
     access_token: str
     expires_in: int
-

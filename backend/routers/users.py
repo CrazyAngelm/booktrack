@@ -14,6 +14,7 @@ users_router = APIRouter(tags=["Users"])
 
 users_service = UsersService()
 
+
 @users_router.post("/api/register/")
 def register_endpoint(user: UserCreate, db: Session = Depends(get_db)):
     return users_service.register_user(user, db)
@@ -26,19 +27,24 @@ def login_endpoint(request: LoginRequest, db: Session = Depends(get_db)):
 
 @users_router.post("/api/logout")
 def logout_endpoint(
-    refresh_token: Annotated[str, Body(embed=True)], db: Session = Depends(get_db)
+    refresh_token: Annotated[str, Body(embed=True)], 
+    db: Session = Depends(get_db)
 ):
     return users_service.logout_user(db, refresh_token)
 
 
 @users_router.post("/api/refresh-token", response_model=AccessToken)
 def regenerate_access_token_endpoint(
-    refresh_token: Annotated[str, Body(embed=True)], db: Session = Depends(get_db)
+    refresh_token: Annotated[str, Body(embed=True)], 
+    db: Session = Depends(get_db)
 ):
     try:
         res = get_refresh_token(db, refresh_token)
         if res is None:
-            raise HTTPException(detail="Invalid refresh token", status_code=400)
+            raise HTTPException(
+                detail="Invalid refresh token", 
+                status_code=400
+            )
 
         return users_service.regenerate_access_token_from_token(refresh_token)
     except jwt.ExpiredSignatureError:

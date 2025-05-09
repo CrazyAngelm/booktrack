@@ -12,13 +12,15 @@ config = Config()
 
 def generate_jwt_token(token_data: dict) -> str:
     return jwt.encode(
-        token_data, config.get_secret_key(), algorithm=config.get_jwt_algorithm()
+        token_data, config.get_secret_key(), 
+        algorithm=config.get_jwt_algorithm()
     )
 
 
 def decode_access_token(token: str) -> dict:
     return jwt.decode(
-        jwt=token, key=config.get_secret_key(), algorithms=[config.get_jwt_algorithm()]
+        jwt=token, key=config.get_secret_key(), 
+        algorithms=[config.get_jwt_algorithm()]
     )
 
 
@@ -66,4 +68,7 @@ def regenerate_access_token(refresh_token: str) -> dict:
         current_datetime + timedelta(minutes=config.get_access_token_expire_minutes())
     ).timestamp()
     access_token = generate_jwt_token(token_data)
-    return {"access_token": access_token, "expires_in": int(access_token_expires_in)}
+    return {
+        "access_token": access_token, 
+        "expires_in": int(access_token_expires_in)
+    }
