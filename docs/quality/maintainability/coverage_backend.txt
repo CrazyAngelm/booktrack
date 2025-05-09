@@ -22,7 +22,9 @@ ______________ coverage: platform darwin, python 3.11.10-final-0 _______________
 Name                            Stmts   Miss Branch BrPart  Cover
 -----------------------------------------------------------------
 core/__init__.py                    1      0      0      0   100%
-core/catalog/__init__.py            1      1      0      0     0%
+core/catalog/__init__.py            3      3      0      0     0%
+core/catalog/crud.py               26     26      4      0     0%
+core/catalog/models.py             18     18      0      0     0%
 core/catalog/schemas.py            26     26      0      0     0%
 core/database.py                    7      0      0      0   100%
 core/favourites/__init__.py         3      0      0      0   100%
@@ -39,7 +41,7 @@ core/users/crud.py                 26      5      6      1    75%
 core/users/models.py               20      0      0      0   100%
 core/users/schemas.py              22      0      0      0   100%
 -----------------------------------------------------------------
-TOTAL                             233     34     16      4    84%
+TOTAL                             279     80     20      4    70%
 Coverage HTML written to dir htmlcov
-Required test coverage of 65% reached. Total coverage: 83.94%
-============================= 57 passed in 38.07s ==============================
+Required test coverage of 65% reached. Total coverage: 69.90%
+============================= 57 passed in 21.91s ==============================

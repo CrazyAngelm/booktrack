@@ -2,10 +2,10 @@
   {
     "url": "http://localhost:8501/",
     "isRepresentativeRun": false,
-    "htmlPath": "/Users/louayfarah/Documents/SQR_project/final-booktrack/booktrack/docs/quality/performance/lighthouse/localhost-_-2025_05_09_21_02_16.report.html",
-    "jsonPath": "/Users/louayfarah/Documents/SQR_project/final-booktrack/booktrack/docs/quality/performance/lighthouse/localhost-_-2025_05_09_21_02_16.report.json",
+    "htmlPath": "/Users/louayfarah/Documents/SQR_project/final-booktrack/booktrack/docs/quality/performance/lighthouse/localhost-_-2025_05_10_00_43_26.report.html",
+    "jsonPath": "/Users/louayfarah/Documents/SQR_project/final-booktrack/booktrack/docs/quality/performance/lighthouse/localhost-_-2025_05_10_00_43_26.report.json",
     "summary": {
-      "performance": 0.25,
+      "performance": 0.24,
       "accessibility": 0.93,
       "best-practices": 1,
       "seo": 0.83,
@@ -15,10 +15,10 @@
   {
     "url": "http://localhost:8501/",
     "isRepresentativeRun": false,
-    "htmlPath": "/Users/louayfarah/Documents/SQR_project/final-booktrack/booktrack/docs/quality/performance/lighthouse/localhost-_-2025_05_09_21_02_26.report.html",
-    "jsonPath": "/Users/louayfarah/Documents/SQR_project/final-booktrack/booktrack/docs/quality/performance/lighthouse/localhost-_-2025_05_09_21_02_26.report.json",
+    "htmlPath": "/Users/louayfarah/Documents/SQR_project/final-booktrack/booktrack/docs/quality/performance/lighthouse/localhost-_-2025_05_10_00_43_36.report.html",
+    "jsonPath": "/Users/louayfarah/Documents/SQR_project/final-booktrack/booktrack/docs/quality/performance/lighthouse/localhost-_-2025_05_10_00_43_36.report.json",
     "summary": {
-      "performance": 0.28,
+      "performance": 0.24,
       "accessibility": 0.93,
       "best-practices": 1,
       "seo": 0.83,
@@ -28,10 +28,10 @@
   {
     "url": "http://localhost:8501/",
     "isRepresentativeRun": true,
-    "htmlPath": "/Users/louayfarah/Documents/SQR_project/final-booktrack/booktrack/docs/quality/performance/lighthouse/localhost-_-2025_05_09_21_02_36.report.html",
-    "jsonPath": "/Users/louayfarah/Documents/SQR_project/final-booktrack/booktrack/docs/quality/performance/lighthouse/localhost-_-2025_05_09_21_02_36.report.json",
+    "htmlPath": "/Users/louayfarah/Documents/SQR_project/final-booktrack/booktrack/docs/quality/performance/lighthouse/localhost-_-2025_05_10_00_43_15.report.html",
+    "jsonPath": "/Users/louayfarah/Documents/SQR_project/final-booktrack/booktrack/docs/quality/performance/lighthouse/localhost-_-2025_05_10_00_43_15.report.json",
     "summary": {
-      "performance": 0.26,
+      "performance": 0.25,
       "accessibility": 0.93,
       "best-practices": 1,
       "seo": 0.83,

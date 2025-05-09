@@ -137,7 +137,7 @@ echo "======================================"
 echo "> Running bandit and saving output to docs/quality/security/bandit.txt"
 mkdir -p docs/quality/security
 poetry run bandit -r backend/core backend/routers backend/services backend/util frontend/app.py \
-  --exit-zero -lll 2>&1 | tee docs/quality/security/bandit_report.txt
+  --exit-zero -lll 2>&1 | tee docs/quality/security/bandit.txt
 
 if poetry run bandit -r backend/core backend/routers backend/services backend/util frontend/app.py --quiet --severity-level high | grep -q '>> Issue:'; then
   echo "::error ::Bandit found CRITICAL issues"

@@ -9,8 +9,8 @@ collected 22 items
 tests/unit/test_app.py ......................                            [100%]
 
 =============================== warnings summary ===============================
-../../../booktrack-backend/sqr-project-backend-venv/lib/python3.11/site-packages/streamlit/elements/vega_charts.py:368
-  /Users/louayfarah/Documents/SQR_project/booktrack-backend/sqr-project-backend-venv/lib/python3.11/site-packages/streamlit/elements/vega_charts.py:368: AltairDeprecationWarning: 
+../sqr-projet-venv/lib/python3.11/site-packages/streamlit/elements/vega_charts.py:368
+  /Users/louayfarah/Documents/SQR_project/final-booktrack/booktrack/sqr-projet-venv/lib/python3.11/site-packages/streamlit/elements/vega_charts.py:368: AltairDeprecationWarning: 
   Deprecated since `altair=5.5.0`. Use altair.theme instead.
   Most cases require only the following change:
   
@@ -55,4 +55,4 @@ tests/unit/test_app.py     151      0      4      0   100%
 TOTAL                      522    174    106     17    62%
 Coverage HTML written to dir htmlcov
 Required test coverage of 60% reached. Total coverage: 61.94%
-======================== 22 passed, 1 warning in 1.49s =========================
+======================== 22 passed, 1 warning in 1.52s =========================
