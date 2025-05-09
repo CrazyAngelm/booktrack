@@ -2,10 +2,12 @@ import os
 import streamlit as st
 import requests
 from datetime import datetime
+import re
+
 
 # Configuration
 API_BASE_URL = os.getenv('API_BASE_URL', 'http://localhost:8000/api')
-PER_PAGE = int(os.getenv('PER_PAGE', 20))
+PER_PAGE = int(os.getenv('PER_PAGE', 36))
 REQUEST_TIMEOUT = 60  # seconds
 
 # Use a persistent session for connection pooling
@@ -144,6 +146,14 @@ def login(email, password):
             'token_expiry': data.get('expires_in'),
             'user_email': email
         })
+        # persist into URL
+        st.query_params.clear()
+        st.query_params = {
+            "access_token":  [st.session_state['access_token']],
+            "refresh_token": [st.session_state['refresh_token']],
+            "user_email":    [st.session_state['user_email']],
+        }
+
         return True
     else:
         detail = ''
@@ -190,28 +200,66 @@ def logout():
         except requests.RequestException:
             pass
     clear_auth()
+    st.query_params.clear()
+
 
 # --- UI Pages ---
 def auth_page():
     st.title('📚 BookTrack')
     tabs = st.tabs(['🔑 Login', '📝 Register'])
+
+    # — Login Tab —
     with tabs[0]:
         email = st.text_input('Email', key='login_email')
-        pwd = st.text_input('Password', type='password', key='login_pwd')
-        if st.button('Login'):
+        pwd   = st.text_input('Password', type='password', key='login_pwd')
+
+        email_valid = bool(re.fullmatch(r"[^@]+@[^@]+\.[^@]+", email))
+        login_disabled = not (email and email_valid and pwd)
+
+        if st.button('Login', disabled=login_disabled):
             if login(email, pwd):
                 st.success('Logged in!')
+                st.rerun()
+
+    # — Register Tab —
     with tabs[1]:
-        fn = st.text_input('First Name', key='reg_name')
-        ln = st.text_input('Surname', key='reg_surname')
-        email_r = st.text_input('Email', key='reg_email')
-        pwd1 = st.text_input('Password', type='password', key='reg_pwd1')
-        pwd2 = st.text_input('Confirm Password', type='password', key='reg_pwd2')
+        fn      = st.text_input('First Name', key='reg_name')
+        ln      = st.text_input('Surname',    key='reg_surname')
+        email_r = st.text_input('Email',      key='reg_email')
+        pwd1    = st.text_input('Password',         type='password', key='reg_pwd1')
+        pwd2    = st.text_input('Confirm Password', type='password', key='reg_pwd2')
+
         if st.button('Register'):
-            if pwd1 != pwd2:
-                st.error('Passwords do not match')
+            # Validate names
+            if not fn.strip() or not ln.strip():
+                st.error("First and last name are required.")
+            # Validate email format
+            elif not email_r or not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", email_r):
+                st.error("Please enter a valid email address.")
+            # Validate password length
+            elif len(pwd1) < 6:
+                st.error("Password must be at least 6 characters.")
+            # Validate password match
+            elif pwd1 != pwd2:
+                st.error("Passwords do not match.")
             else:
-                register(fn, ln, email_r, pwd1)
+                resp = session.post(
+                    f"{API_BASE_URL}/register",
+                    json={'name': fn, 'surname': ln, 'email': email_r, 'password': pwd1},
+                    timeout=REQUEST_TIMEOUT
+                )
+                if resp.ok:
+                    data = resp.json()
+                    # auto‐login on successful registration
+                    st.session_state['access_token']  = data['access_token']
+                    st.session_state['refresh_token'] = data['refresh_token']
+                    st.session_state['user_email']    = email_r
+                    # persist query params as before…
+                    st.success('Registration successful — you are now logged in!')
+                    st.rerun()
+                else:
+                    detail = resp.json().get('detail', resp.text)
+                    st.error(f"Registration failed: {detail}")
 
 def clear_selection():
     st.session_state['selected_book'] = None
@@ -229,29 +277,31 @@ def details_page():
 
     # — Header: Title & Back Button —
     # — Actions: Favourites & Reading List —
-    title_col, fav_col, rl_col, back_col = st.columns([8, 1.5, 1.5, 1], gap="small", vertical_alignment="bottom")
+    title_col, fav_col, rl_col, back_col = st.columns([9, 1.5, 1.5, 1.37], gap="small", vertical_alignment="bottom")
     with title_col:
         st.title(data.get('title', ''))
     with back_col:
-        if st.button("← Back", key=f"back_{bid}", on_click=clear_selection):
-            return
+        st.button("←  Back", key=f"back_{bid}", on_click=clear_selection, use_container_width=True)
+            
 
     st.markdown("---")
 
     # Favourite toggle
     fav_ids = [f['book_id'] for f in fetch_favourites().get('favourites', [])]
     is_fav = bid in fav_ids
+    def _toggle_fav():
+        api_request(
+            'PUT', f"/favourites/book-id/{bid}",
+            params={'is_favourite': not is_fav}
+        )
+        fetch_favourites.clear()
     with fav_col:
-        if st.button(
+        st.button(
             "💔 Remove Favourite" if is_fav else "❤️ Add Favourite",
-            use_container_width=True
-        ):
-            api_request(
-                'PUT', f"/favourites/book-id/{bid}",
-                params={'is_favourite': not is_fav}
-            )
-            fetch_favourites.clear()
-            return
+            key=f"fav_btn_{bid}",
+            use_container_width=True,
+            on_click=_toggle_fav
+        )
 
     # Reading-status selectbox with immediate update
     def _on_status_change():
@@ -308,10 +358,10 @@ def details_page():
         )
 
     # — Book Metadata —
-    img_col, info_col = st.columns([1, 2], gap="medium")
+    _, img_col, info_col = st.columns([0.3, 1, 2], gap="medium",)
     cover = data.get('formats', {}).get('image/jpeg')
     if cover:
-        img_col.image(cover, width=220)
+        img_col.image(cover, width=350 )
     with info_col:
         st.subheader("Authors")
         for a in data.get('authors', []):
@@ -354,16 +404,16 @@ def search_page():
         # safe summary
         summaries = b.get('summaries') or ['']
         desc = summaries[0]
-        desc = desc[:200] + '...' if len(desc) > 200 else desc
+        desc = desc[:250] + '...' if len(desc) > 200 else desc
         dl = b.get('download_count', 0)
         langs = ', '.join(b.get('languages', []))
-        cols = st.columns([1, 4, 2], vertical_alignment='center')
+        cols = st.columns([1, 1, 4, 1, 1], vertical_alignment='center')
         if img:
-            cols[0].image(img, width=100)
-        cols[1].markdown(f"**{title}** by {auths}")
-        cols[1].write(desc)
-        cols[1].write(f"Downloads: {dl} | Languages: {langs}")
-        if cols[2].button('Details', key=f"d{b.get('id')}", on_click=set_selection, args=(b.get('id'),)):
+            cols[1].image(img, width=150)
+        cols[2].markdown(f"**{title}** by {auths}")
+        cols[2].write(desc)
+        cols[2].write(f"Downloads: {dl} | Languages: {langs}")
+        if cols[3].button('Details', key=f"d{b.get('id')}", on_click=set_selection, args=(b.get('id'),), use_container_width=True):
             return
     def _prev():
         if st.session_state['search_page'] > 1:
@@ -396,13 +446,13 @@ def favourites_page():
         desc = desc[:150] + '...' if len(desc) > 150 else desc
         dl = b.get('download_count', 0)
         langs = ', '.join(b.get('languages', []))
-        cols = st.columns([1, 4, 1])
+        cols = st.columns([1, 1, 4, 1, 1], vertical_alignment='center')
         if img:
-            cols[0].image(img, width=100)
-        cols[1].markdown(f"**{title}** by {auths}")
-        cols[1].write(desc)
-        cols[1].write(f"Downloads: {dl} | Languages: {langs}")
-        if cols[2].button('Remove', key=f"rm{bid}"):
+            cols[1].image(img, width=150)
+        cols[2].markdown(f"**{title}** by {auths}")
+        cols[2].write(desc)
+        cols[2].write(f"Downloads: {dl} | Languages: {langs}")
+        if cols[3].button('Remove', key=f"rm{bid}", use_container_width=True):
             api_request('PUT', f'/favourites/book-id/{bid}', params={'is_favourite': False})
             fetch_favourites.clear()
             return
@@ -427,51 +477,103 @@ def reading_list_page():
         desc = summaries[0]
         desc = desc[:150] + '...' if len(desc) > 150 else desc
         dl = b.get('download_count', 0)
-        cols = st.columns([1, 4, 1])
+        cols = st.columns([1, 1, 4, 1, 1], vertical_alignment='center')
         if img:
-            cols[0].image(img, width=100)
-        cols[1].markdown(f"**{title}** — {r['status']}")
-        cols[1].write(desc)
-        cols[1].write(f"Downloads: {dl}")
-        if cols[2].button('Details', key=f"rl{bid}", on_click=set_selection, args=(bid,)):
+            cols[1].image(img, width=150)
+        cols[2].markdown(f"**{title}** — {r['status']}")
+        cols[2].write(desc)
+        cols[2].write(f"Downloads: {dl}")
+        if cols[3].button('Details', key=f"rl{bid}", on_click=set_selection, args=(bid,), use_container_width=True):
             return
 
 def dashboard_page():
     st.header('📊 Dashboard')
+
+    # Fetch data (your existing code)
     rl = fetch_reading_list().get('reading_list', [])
+    total = len(rl)
+    want = sum(1 for r in rl if r['status'] == 'Want')
     reading = sum(1 for r in rl if r['status'] == 'Reading')
     completed = sum(1 for r in rl if r['status'] == 'Read')
+
     favs = fetch_favourites().get('favourites', [])
+    total_favs = len(favs)
     recent = 'None'
     if favs:
         bid = favs[-1]['book_id']
         b = fetch_book_details(bid)
-        recent = b.get('title') if b else 'Unknown'
-    c1, c2, c3 = st.columns(3)
-    c1.metric('Reading', reading)
-    c2.metric('Completed', completed)
-    c3.metric('Recent Favourite', recent)
+        recent = b.get('title', 'Unknown') if b else 'Unknown'
+
+    # Compute rates (your existing code)
+    pct_want = f"{(want / total * 100):.0f}%" if total else "0%"
+    pct_completed = f"{(completed / total * 100):.0f}%" if total else "0%"
+
+    # Metrics row (your existing code)
+    c1, c2, c3, c4= st.columns(4)
+    c1.metric("📖 Want to Read", want, pct_want)
+    c2.metric("📚 Reading", reading)
+    c3.metric("✅ Completed", completed, pct_completed)
+    c4.metric("❤️ Favourites", total_favs)
+    # c5.metric("⭐ Recent Favourite", recent)
+
+    st.markdown("---")
+
+    # Bar chart with custom colors (UPDATED)
+    import pandas as pd
+    df = pd.DataFrame({
+        "Status": ["Want", "Reading", "Read"],
+        "Count": [want, reading, completed]
+    })
+
+    # Beautiful colors: Green, Blue, Yellow
+    bar_colors = ["#4CAF50", "#2196F3", "#FFEB3B"]  # Green, Blue, Yellow
+
+    c1, c2, _ = st.columns([6, 3, 3], gap="small", vertical_alignment="top")
+    c2.line_chart(
+        df.set_index("Status"),
+        use_container_width=True,
+        height=500,
+        color="#FFEB3B"  # Apply custom colors
+    )
+    c1.metric("⭐ Most Recent Favourite", recent)
+
+
+
 
 # --- Main Setup ---
 st.set_page_config(page_title='BookTrack', layout='wide')
 
-# Authentication
-if not st.session_state['access_token']:
+# Persist login state across refresh via query params
+if 'access_token'   in st.query_params:
+    st.session_state['access_token']  = st.query_params['access_token'][0]
+if 'refresh_token'  in st.query_params:
+    st.session_state['refresh_token'] = st.query_params['refresh_token'][0]
+if 'user_email'     in st.query_params:
+    st.session_state['user_email']    = st.query_params['user_email'][0]
+
+    
+# 1) If not authenticated, show only the auth page, then halt.
+if st.session_state['access_token'] is None:
     auth_page()
     st.stop()
+    if st.session_state['access_token'] is None:
+        st.stop()
+    
 
-# Sidebar: user & logout
-st.sidebar.markdown(f"**User:** {st.session_state['user_email']}")
-if st.sidebar.button('Logout'):
+# 2) Once here, we know the user is logged in—show a top bar instead of sidebar.
+top_col, logout_col = st.columns([9,1])
+
+top_col.write(f"### **Welcome**, &nbsp; *{st.session_state['user_email']}*")
+
+if logout_col.button("Logout", use_container_width=True):
     logout()
-    st.experimental_rerun()
+    st.rerun()
 
-# Details view
+# 3) Now render the rest of your app (details/search/favourites/etc.)
 if st.session_state['selected_book'] is not None:
     details_page()
     st.stop()
 
-# Main tabs
 tabs = st.tabs(['Search', 'Favourites', 'Reading List', 'Dashboard'])
 with tabs[0]:
     search_page()
