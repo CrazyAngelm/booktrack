@@ -178,3 +178,4 @@ env*
 tmp/
 
 mutants/
+node_modules/

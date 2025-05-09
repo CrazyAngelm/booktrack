@@ -55,7 +55,7 @@ except:
 
 class BookTrackUser(HttpUser):
     # emulate a realistic think time between requests
-    wait_time = between(1, 2)
+    wait_time = between(3, 10)
     
 
     @task(3)
