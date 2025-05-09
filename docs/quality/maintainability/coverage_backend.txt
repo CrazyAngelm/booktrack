@@ -1,34 +1,40 @@
+The currently activated Python version 3.10.12 is not supported by the project (>=3.11,<4.0.0).
+Trying to find and use a compatible version. 
+Using python3.12 (3.12.9)
 ============================= test session starts ==============================
-platform darwin -- Python 3.11.10, pytest-8.3.5, pluggy-1.5.0
+platform linux -- Python 3.12.9, pytest-8.3.5, pluggy-1.5.0
 sensitiveurl: .*
-rootdir: /Users/louayfarah/Documents/SQR_project/final-booktrack/booktrack/backend
+rootdir: /home/bidrift/repos/booktrack/backend
 configfile: pyproject.toml
-plugins: anyio-4.9.0, hypothesis-6.131.15, variables-3.1.0, html-4.1.1, metadata-3.1.1, base-url-2.1.0, cov-6.1.1, selenium-4.1.0
-collected 57 items
+plugins: cov-6.1.1, metadata-3.1.1, anyio-4.9.0, variables-3.1.0, selenium-4.1.0, html-4.1.1, base-url-2.1.0, hypothesis-6.131.15
+collected 79 items
 
-tests/api/catalog/test_catalog_api.py ..........                         [ 17%]
-tests/api/favourites/test_favourites_api.py ........                     [ 31%]
-tests/api/reading-list/test_reading_list_api.py ...........              [ 50%]
-tests/api/users/test_users_api.py ........                               [ 64%]
-tests/fuzz/test_token_fuzz.py .                                          [ 66%]
-tests/unit/test_favourites.py ......                                     [ 77%]
-tests/unit/test_logging.py .                                             [ 78%]
-tests/unit/test_reading_list.py ......                                   [ 89%]
+tests/api/catalog/test_catalog_api.py ..........                         [ 12%]
+tests/api/favourites/test_favourites_api.py ........                     [ 22%]
+tests/api/reading-list/test_reading_list_api.py ...........              [ 36%]
+tests/api/users/test_users_api.py ........                               [ 46%]
+tests/fuzz/test_catalog_fuzz.py ....                                     [ 51%]
+tests/fuzz/test_favourites_fuzz.py .......                               [ 60%]
+tests/fuzz/test_reading_list_fuzz.py ......                              [ 68%]
+tests/fuzz/test_token_fuzz.py .                                          [ 69%]
+tests/unit/test_favourites.py ...........                                [ 83%]
+tests/unit/test_logging.py .                                             [ 84%]
+tests/unit/test_reading_list.py ......                                   [ 92%]
 tests/unit/test_users.py ......                                          [100%]
 
 ================================ tests coverage ================================
-______________ coverage: platform darwin, python 3.11.10-final-0 _______________
+_______________ coverage: platform linux, python 3.12.9-final-0 ________________
 
 Name                            Stmts   Miss Branch BrPart  Cover
 -----------------------------------------------------------------
 core/__init__.py                    1      0      0      0   100%
-core/catalog/__init__.py            3      3      0      0     0%
-core/catalog/crud.py               26     26      4      0     0%
-core/catalog/models.py             18     18      0      0     0%
-core/catalog/schemas.py            26     26      0      0     0%
+core/catalog/__init__.py            3      0      0      0   100%
+core/catalog/crud.py               26      3      4      1    87%
+core/catalog/models.py             18      0      0      0   100%
+core/catalog/schemas.py            26      2      0      0    92%
 core/database.py                    7      0      0      0   100%
 core/favourites/__init__.py         3      0      0      0   100%
-core/favourites/crud.py            25      0      6      1    97%
+core/favourites/crud.py            25      0      6      0   100%
 core/favourites/models.py           8      0      0      0   100%
 core/favourites/schemas.py         14      1      0      0    93%
 core/logging.py                     8      0      0      0   100%
@@ -41,7 +47,7 @@ core/users/crud.py                 26      5      6      1    75%
 core/users/models.py               20      0      0      0   100%
 core/users/schemas.py              22      0      0      0   100%
 -----------------------------------------------------------------
-TOTAL                             279     80     20      4    70%
+TOTAL                             279     12     20      4    94%
 Coverage HTML written to dir htmlcov
-Required test coverage of 65% reached. Total coverage: 69.90%
-============================= 57 passed in 21.91s ==============================
+Required test coverage of 65% reached. Total coverage: 93.98%
+============================= 79 passed in 35.37s ==============================
