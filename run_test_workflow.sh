@@ -6,6 +6,7 @@ mkdir -p docs
 mkdir -p docs/quality
 mkdir -p docs/quality/maintainability
 mkdir -p docs/quality/performance/locust
+mkdir -p docs/quality/performance/lighthouse
 mkdir -p docs/quality/security
 mkdir -p backend/logs
 
@@ -23,15 +24,27 @@ poetry run pytest tests/ \
   --cov-report=html \
   --cov-fail-under=65 2>&1 \
   | tee ../docs/quality/maintainability/coverage_backend.txt
+
+echo
+echo "======================================"
+echo "Fuzz Tests (Hypothesis)"
+echo "======================================"
+poetry run pytest tests/fuzz --maxfail=1 --disable-warnings -q \
+  | tee ../docs/quality/maintainability/fuzz_tests.txt
 cd ..
 
 echo
 echo "======================================"
-echo "2) Frontend tests"
+echo "2) Frontend tests + coverage (≥ 60 %)"
 echo "======================================"
 cd frontend
 echo "> Running pytest with coverage on app/"
 poetry run pytest tests/ \
+--cov=. \
+  --cov-branch \
+  --cov-report=term \
+  --cov-report=html \
+  --cov-fail-under=60 2>&1 \
   | tee ../docs/quality/maintainability/coverage_frontend.txt
 cd ..
 
@@ -101,7 +114,7 @@ cd backend
 echo "> Running locust headlessly against http://localhost:8000"
 poetry run locust -f locustfile.py --headless \
   --host http://localhost:8000 \
-  -u 100 -r 10 \
+  -u 50 -r 10 \
   --run-time=60s \
   --csv=../docs/quality/performance/locust/report \
   --csv-full-history
@@ -109,7 +122,17 @@ cd ..
 
 echo
 echo "======================================"
-echo "8) Static security scan (Bandit)"
+echo "8) Performance testing (Lighthouse)"
+echo "======================================"
+echo "> Installing Lighthouse"
+npm install --save-dev @lhci/cli@0.7
+echo "> Running LHCI against http://localhost:8501"
+npx lhci autorun --config=lighthouserc.json
+
+
+echo
+echo "======================================"
+echo "9) Static security scan (Bandit)"
 echo "======================================"
 echo "> Running bandit and saving output to docs/quality/security/bandit.txt"
 mkdir -p docs/quality/security

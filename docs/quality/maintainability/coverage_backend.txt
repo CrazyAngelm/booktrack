@@ -1,16 +1,17 @@
 ============================= test session starts ==============================
 platform darwin -- Python 3.11.10, pytest-8.3.5, pluggy-1.5.0
 sensitiveurl: .*
-rootdir: /Users/louayfarah/Documents/SQR_project/booktrack-backend/backend
+rootdir: /Users/louayfarah/Documents/SQR_project/final-booktrack/booktrack/backend
 configfile: pyproject.toml
-plugins: anyio-4.9.0, variables-3.1.0, html-4.1.1, metadata-3.1.1, base-url-2.1.0, cov-6.1.1, selenium-4.1.0
-collected 56 items
+plugins: anyio-4.9.0, hypothesis-6.131.15, variables-3.1.0, html-4.1.1, metadata-3.1.1, base-url-2.1.0, cov-6.1.1, selenium-4.1.0
+collected 57 items
 
 tests/api/catalog/test_catalog_api.py ..........                         [ 17%]
-tests/api/favourites/test_favourites_api.py ........                     [ 32%]
-tests/api/reading-list/test_reading_list_api.py ...........              [ 51%]
-tests/api/users/test_users_api.py ........                               [ 66%]
-tests/unit/test_favourites.py ......                                     [ 76%]
+tests/api/favourites/test_favourites_api.py ........                     [ 31%]
+tests/api/reading-list/test_reading_list_api.py ...........              [ 50%]
+tests/api/users/test_users_api.py ........                               [ 64%]
+tests/fuzz/test_token_fuzz.py .                                          [ 66%]
+tests/unit/test_favourites.py ......                                     [ 77%]
 tests/unit/test_logging.py .                                             [ 78%]
 tests/unit/test_reading_list.py ......                                   [ 89%]
 tests/unit/test_users.py ......                                          [100%]
@@ -21,7 +22,9 @@ ______________ coverage: platform darwin, python 3.11.10-final-0 _______________
 Name                            Stmts   Miss Branch BrPart  Cover
 -----------------------------------------------------------------
 core/__init__.py                    1      0      0      0   100%
-core/catalog/__init__.py            1      1      0      0     0%
+core/catalog/__init__.py            3      3      0      0     0%
+core/catalog/crud.py               26     26      4      0     0%
+core/catalog/models.py             18     18      0      0     0%
 core/catalog/schemas.py            26     26      0      0     0%
 core/database.py                    7      0      0      0   100%
 core/favourites/__init__.py         3      0      0      0   100%
@@ -38,7 +41,7 @@ core/users/crud.py                 26      5      6      1    75%
 core/users/models.py               20      0      0      0   100%
 core/users/schemas.py              22      0      0      0   100%
 -----------------------------------------------------------------
-TOTAL                             233     34     16      4    84%
+TOTAL                             279     80     20      4    70%
 Coverage HTML written to dir htmlcov
-Required test coverage of 65% reached. Total coverage: 83.94%
-============================= 56 passed in 25.25s ==============================
+Required test coverage of 65% reached. Total coverage: 69.90%
+============================= 57 passed in 21.91s ==============================
