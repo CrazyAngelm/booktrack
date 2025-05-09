@@ -1,0 +1,53 @@
+    core.favourites.crud.x_get_favourites_by_user_email__mutmut_1: survived
+    core.favourites.crud.x_get_favourites_by_user_email__mutmut_2: survived
+    core.favourites.crud.x_get_favourite_by_book_id__mutmut_1: survived
+    core.favourites.crud.x_get_favourite_by_book_id__mutmut_2: survived
+    core.favourites.crud.x_get_favourite_by_book_id__mutmut_3: survived
+    core.favourites.crud.x_create_favourite__mutmut_5: survived
+    core.favourites.crud.x_create_favourite__mutmut_7: survived
+    core.favourites.crud.x_create_favourite__mutmut_8: survived
+    core.favourites.crud.x_update_favourite__mutmut_1: survived
+    core.favourites.crud.x_update_favourite__mutmut_2: survived
+    core.favourites.crud.x_update_favourite__mutmut_3: survived
+    core.favourites.crud.x_update_favourite__mutmut_6: survived
+    core.favourites.crud.x_update_favourite__mutmut_8: survived
+    core.favourites.crud.x_update_favourite__mutmut_9: survived
+    core.reading_list.crud.x_get_reading_list_by_user_email__mutmut_1: survived
+    core.reading_list.crud.x_get_reading_list_by_user_email__mutmut_2: survived
+    core.reading_list.crud.x_get_reading_list_book_by_book_id__mutmut_1: survived
+    core.reading_list.crud.x_get_reading_list_book_by_book_id__mutmut_2: survived
+    core.reading_list.crud.x_get_reading_list_book_by_book_id__mutmut_3: survived
+    core.reading_list.crud.x_get_reading_list_by_status__mutmut_1: survived
+    core.reading_list.crud.x_get_reading_list_by_status__mutmut_2: survived
+    core.reading_list.crud.x_get_reading_list_by_status__mutmut_3: survived
+    core.reading_list.crud.x_create_reading_list_book__mutmut_7: survived
+    core.reading_list.crud.x_create_reading_list_book__mutmut_8: survived
+    core.reading_list.crud.x_create_reading_list_book__mutmut_10: survived
+    core.reading_list.crud.x_create_reading_list_book__mutmut_11: survived
+    core.reading_list.crud.x_update_reading_list_book__mutmut_1: survived
+    core.reading_list.crud.x_update_reading_list_book__mutmut_2: survived
+    core.reading_list.crud.x_update_reading_list_book__mutmut_3: survived
+    core.reading_list.crud.x_update_reading_list_book__mutmut_6: survived
+    core.reading_list.crud.x_update_reading_list_book__mutmut_7: survived
+    core.reading_list.crud.x_delete_reading_list_book__mutmut_1: survived
+    core.reading_list.crud.x_delete_reading_list_book__mutmut_2: survived
+    core.reading_list.crud.x_delete_reading_list_book__mutmut_3: survived
+    core.users.crud.x_get_user_by_email__mutmut_1: survived
+    core.users.crud.x_get_user_by_email__mutmut_2: survived
+    core.users.crud.x_save_refresh_token__mutmut_2: survived
+    core.users.crud.x_save_refresh_token__mutmut_3: survived
+    core.users.crud.x_save_refresh_token__mutmut_4: survived
+    core.users.crud.x_save_refresh_token__mutmut_8: survived
+    core.users.crud.x_save_refresh_token__mutmut_9: survived
+    core.users.crud.x_save_refresh_token__mutmut_10: survived
+    core.users.crud.x_save_refresh_token__mutmut_11: survived
+    core.users.crud.x_save_refresh_token__mutmut_12: survived
+    core.users.crud.x_save_refresh_token__mutmut_13: survived
+    core.users.crud.x_save_refresh_token__mutmut_14: survived
+    core.users.crud.x_save_refresh_token__mutmut_15: survived
+    core.users.crud.x_get_refresh_token_by_user_id__mutmut_1: survived
+    core.users.crud.x_get_refresh_token_by_user_id__mutmut_2: survived
+    core.users.crud.x_get_refresh_token__mutmut_1: no tests
+    core.users.crud.x_get_refresh_token__mutmut_2: no tests
+    core.users.crud.x_get_refresh_token__mutmut_3: no tests
+    core.users.crud.x_get_refresh_token__mutmut_4: no tests

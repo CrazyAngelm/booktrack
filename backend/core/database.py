@@ -8,5 +8,8 @@ config = Config()
 Base = declarative_base()
 
 
-engine = create_engine(config.get_database_connection_string(), connect_args={"check_same_thread": False})
+engine = create_engine(
+    config.get_database_connection_string(), 
+    connect_args={"check_same_thread": False}
+)
 session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)

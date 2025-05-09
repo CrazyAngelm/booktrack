@@ -25,4 +25,3 @@ class RefreshToken(Base):
     refresh_tokens = Column(String, unique=True, index=True)
     expires_at = Column(DateTime)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), index=True)
-

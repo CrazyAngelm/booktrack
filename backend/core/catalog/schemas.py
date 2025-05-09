@@ -2,10 +2,12 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict
 
+
 class Person(BaseModel):
     name: str
     birth_year: int | None = None
     death_year: int | None = None
+    
     def __init__(self, **data: Any):
         super().__init__(**data)
 
@@ -21,13 +23,15 @@ class BookBase(BaseModel):
     media_type: str
     formats: dict[str, str]
     download_count: int
+    
     def __init__(self, **data: Any):
         super().__init__(**data)
+
 
 class BookCreate(BookBase):
     pass
 
+
 class BookRead(BookBase):
     id: int
     model_config = ConfigDict(from_attributes=True)
-

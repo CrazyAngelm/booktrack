@@ -14,7 +14,11 @@ favourites_service = FavouritesService()
 config = Config()
 
 
-@favourites_router.get("/api/favourites", response_model=dict[str, str | list[FavouriteRead]], status_code=200)
+@favourites_router.get(
+    "/api/favourites", 
+    response_model=dict[str, str | list[FavouriteRead]], 
+    status_code=200
+)
 def fetch_favourites_for_user_endpoint(
     user: AuthenticatedUser = Depends(get_user),
     db: Session = Depends(get_db),
@@ -23,7 +27,11 @@ def fetch_favourites_for_user_endpoint(
     return {"user_email": user.email, "favourites": result}
 
 
-@favourites_router.get("/api/favourites/book-id/{book_id}", response_model=FavouriteRead, status_code=200)
+@favourites_router.get(
+    "/api/favourites/book-id/{book_id}", 
+    response_model=FavouriteRead, 
+    status_code=200
+)
 def fetch_favourite_for_user_endpoint(
     book_id: int,
     user: AuthenticatedUser = Depends(get_user),
@@ -51,6 +59,7 @@ def create_favourite_endpoint(
         raise HTTPException(status_code=401, detail="Failed to create favourite")
     return result
 
+
 @favourites_router.put("/api/favourites/book-id/{book_id}", response_model=dict, status_code=200)
 def update_favourite_endpoint(
     book_id: int,
@@ -60,7 +69,11 @@ def update_favourite_endpoint(
 ):
     try:
         favourites_service.update_favourite_for_user(user.email, book_id, is_favourite, db)
-        return {"message": "Favourite updated successfully", "book_id": book_id, "user_email": user.email, "is_favourite": is_favourite}
+        return {
+            "message": "Favourite updated successfully", 
+            "book_id": book_id, 
+            "user_email": user.email, 
+            "is_favourite": is_favourite
+        }
     except Exception as e:
         raise HTTPException(status_code=401, detail=f"Failed to update favourite: {str(e)}")
-    

@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from core.users.models import User, RefreshToken
 from core.users import *  # Adjust to your actual import path
 import uuid
+import re
+import random
 
 
 @pytest.fixture

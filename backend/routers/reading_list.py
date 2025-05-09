@@ -14,7 +14,11 @@ reading_list_service = ReadingListService()
 config = Config()
 
 
-@reading_list_router.get("/api/reading-list", response_model=dict[str, str | list[ReadingListBookRead]], status_code=200)
+@reading_list_router.get(
+    "/api/reading-list", 
+    response_model=dict[str, str | list[ReadingListBookRead]], 
+    status_code=200
+)
 def fetch_favourites_for_user_endpoint(
     user: AuthenticatedUser = Depends(get_user),
     db: Session = Depends(get_db),
@@ -23,7 +27,11 @@ def fetch_favourites_for_user_endpoint(
     return {"user_email": user.email, "reading_list": result}
 
 
-@reading_list_router.get("/api/reading-list/book-id/{book_id}", response_model=ReadingListBookRead, status_code=200)
+@reading_list_router.get(
+    "/api/reading-list/book-id/{book_id}", 
+    response_model=ReadingListBookRead, 
+    status_code=200
+)
 def fetch_favourites_for_user_by_book_id_endpoint(
     book_id: int,
     user: AuthenticatedUser = Depends(get_user),
@@ -35,7 +43,12 @@ def fetch_favourites_for_user_by_book_id_endpoint(
         raise HTTPException(status_code=404, detail="Book not found in the reading list")
     return existing_book
 
-@reading_list_router.get("/api/reading-list/status/{status}", response_model=dict[str, str | list[ReadingListBookRead]], status_code=200)
+
+@reading_list_router.get(
+    "/api/reading-list/status/{status}", 
+    response_model=dict[str, str | list[ReadingListBookRead]], 
+    status_code=200
+)
 def fetch_favourites_for_user_by_status_endpoint(
     status: str,
     user: AuthenticatedUser = Depends(get_user),
@@ -48,7 +61,11 @@ def fetch_favourites_for_user_by_status_endpoint(
     return {"user_email": user.email, "reading_list": result}
 
 
-@reading_list_router.put("/api/reading-list/book-id/{book_id}", response_model=ReadingListBookRead, status_code=200)
+@reading_list_router.put(
+    "/api/reading-list/book-id/{book_id}", 
+    response_model=ReadingListBookRead, 
+    status_code=200
+)
 def update_book_in_reading_list_endpoint(
     book_id: int,
     status: str,
@@ -88,7 +105,11 @@ def add_book_to_reading_list_endpoint(
     return result
 
 
-@reading_list_router.delete("/api/reading-list/book-id/{book_id}", response_model=ReadingListBookRead, status_code=200)
+@reading_list_router.delete(
+    "/api/reading-list/book-id/{book_id}", 
+    response_model=ReadingListBookRead, 
+    status_code=200
+)
 def delete_book_from_reading_list_endpoint(
     book_id: int,
     user: AuthenticatedUser = Depends(get_user),
@@ -97,8 +118,14 @@ def delete_book_from_reading_list_endpoint(
     # Check if book exists
     existing_book = reading_list_service.fetch_reading_list_book_for_user(user.email, book_id, db)
     if not existing_book:
-        raise HTTPException(status_code=404, detail="Book not found in the reading list")
+        raise HTTPException(
+            status_code=404, 
+            detail="Book not found in the reading list"
+        )
     result = reading_list_service.delete_reading_list_book_for_user(user.email, book_id, db)
     if not result:
-        raise HTTPException(status_code=401, detail="Book was not deleted successfully")
+        raise HTTPException(
+            status_code=401, 
+            detail="Book was not deleted successfully"
+        )
     return result

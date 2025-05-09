@@ -2,6 +2,7 @@ import requests
 
 from config import Config
 
+
 class CatalogService():
     config = Config()
     
@@ -23,7 +24,7 @@ class CatalogService():
         """
         Fetches a book by its ID from the database.
         """
-        url = self.config.get_gutendex_base_url() + f"/books"
+        url = self.config.get_gutendex_base_url() + "/books"
         params = {
             "ids": book_id
         }
