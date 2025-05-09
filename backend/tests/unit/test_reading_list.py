@@ -22,16 +22,6 @@ def mock_reading_list_book():
     )
 
 
-def test_get_reading_list_by_user_email(mock_db, mock_reading_list_book):
-    mock_db.query.return_value.filter.return_value.all.return_value = [
-        mock_reading_list_book]
-
-    result = get_reading_list_by_user_email(mock_db, "user@example.com")
-
-    assert result == [mock_reading_list_book]
-    mock_db.query.return_value.filter.return_value.all.assert_called_once()
-
-
 def test_get_reading_list_book_by_book_id(mock_db, mock_reading_list_book):
     mock_db.query.return_value.filter.return_value.\
         filter.return_value.first.return_value = mock_reading_list_book
@@ -55,6 +45,16 @@ def test_get_reading_list_by_status(mock_db, mock_reading_list_book):
         filter.return_value.all.assert_called_once()
 
 
+
+def test_get_reading_list_by_user_email(mock_db, mock_reading_list_book):
+    mock_db.query.return_value.filter.return_value.all.return_value = [mock_reading_list_book]
+
+    result = get_reading_list_by_user_email(mock_db, "user@example.com")
+
+    assert result == [mock_reading_list_book]
+    mock_db.query.return_value.filter.return_value.all.assert_called_once()
+
+
 def test_create_reading_list_book(mock_db):
     mock_db.add.return_value = None
     mock_db.commit.return_value = None
@@ -65,17 +65,17 @@ def test_create_reading_list_book(mock_db):
     assert result.user_email == "user@example.com"
     assert result.book_id == 1
     assert result.status == "want"
+    assert result.created_at is not None
+    assert result.updated_at is not None
     mock_db.add.assert_called_once()
     mock_db.commit.assert_called_once()
     mock_db.refresh.assert_called_once()
-
-
+    
+    
 def test_update_reading_list_book(mock_db, mock_reading_list_book):
-    mock_db.query.return_value.filter.return_value.\
-        filter.return_value.first.return_value = mock_reading_list_book
+    mock_db.query.return_value.filter.return_value.filter.return_value.first.return_value = mock_reading_list_book
 
-    result = update_reading_list_book(
-        mock_db, "user@example.com", 1, "reading")
+    result = update_reading_list_book(mock_db, "user@example.com", 1, "reading")
 
     assert result.status == "reading"
     mock_db.commit.assert_called_once()
@@ -83,8 +83,7 @@ def test_update_reading_list_book(mock_db, mock_reading_list_book):
 
 
 def test_delete_reading_list_book(mock_db, mock_reading_list_book):
-    mock_db.query.return_value.filter.return_value.\
-        filter.return_value.first.return_value = mock_reading_list_book
+    mock_db.query.return_value.filter.return_value.filter.return_value.first.return_value = mock_reading_list_book
 
     result = delete_reading_list_book(mock_db, "user@example.com", 1)
 
