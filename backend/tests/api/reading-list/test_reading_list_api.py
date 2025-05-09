@@ -57,8 +57,7 @@ def reading_record(auth_header, book_id):
             200, 404}, f"Failed to clean previous state: {del_resp.text}"
         r = requests.post(READING_PATH, headers=auth_header, params=payload)
 
-    assert r.status_code == 201, f"Failed to create reading record: {
-        r.status_code} {r.text}"
+    assert r.status_code == 201, f"Failed to create reading record: " + r.status_code + ", " + r.text
     return r.json()
 
 

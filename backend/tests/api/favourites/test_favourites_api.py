@@ -47,8 +47,7 @@ def book_id(auth_header):
 @pytest.fixture(scope="module")
 def favourite_record(auth_header, book_id):
     r = requests.post(f"{FAV_PATH}?book_id={book_id}", headers=auth_header)
-    assert r.status_code == 201, f"Unexpected response: {
-        r.status_code}, {r.text}"
+    assert r.status_code == 201, "Unexpected response: " + r.status_code + ", " + r.text
     return r.json()
 
 
