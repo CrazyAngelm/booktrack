@@ -1,6 +1,7 @@
 # backend/locustfile.py
 from locust import HttpUser, task, between
 import requests
+import random
 
 
 def register_user(name: str, surname: str, email: str, password: str):
@@ -55,13 +56,14 @@ except:
 
 class BookTrackUser(HttpUser):
     # emulate a realistic think time between requests
-    wait_time = between(1, 2)
+    wait_time = between(3, 10)
     
 
     @task(3)
     def list_books(self):
+        random_page_no = random.randint(1, 5)
         # hit the paginated discovery endpoint
-        self.client.get("/api/books/", name="GET /api/books", headers={
+        self.client.get(f"/api/books?page_no={random_page_no}&page_size=36", name="GET /api/books", headers={
             "Authorization": f"Bearer {access_token}",
             "Content-Type": "application/json",
             "Accept": "application/json"
@@ -69,8 +71,9 @@ class BookTrackUser(HttpUser):
 
     @task(1)
     def get_book(self):
+        random_book_id = random.randint(1, 100)
         # fetch a specific book
-        self.client.get("/api/books/book-id/1", name="GET /api/books/book-id/:id", headers={
+        self.client.get(f"/api/books/book-id/{random_book_id}", name="GET /api/books/book-id/:id", headers={
             "Authorization": f"Bearer {access_token}",
             "Content-Type": "application/json",
             "Accept": "application/json"

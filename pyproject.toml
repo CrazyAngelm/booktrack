@@ -1,7 +1,7 @@
 [project]
-name = "booktrack-backend"
+name = "booktrack"
 version = "0.1.0"
-description = "This is the backend repository for the BookTrack application as part of the SQR course project"
+description = "This is the full repository for the BookTrack application as part of the SQR course project"
 authors = [
     {name = "LouayFarah",email = "louayfarahioi@gmail.com"}
 ]
@@ -28,7 +28,8 @@ dependencies = [
     "mutmut (>=3.2.3,<4.0.0)",
     "radon (>=6.0.1,<7.0.0)",
     "locust (>=2.37.1,<3.0.0)",
-    "bandit (>=1.8.3,<2.0.0)"
+    "bandit (>=1.8.3,<2.0.0)",
+    "hypothesis (>=6.131.15,<7.0.0)"
 ]
 
 
@@ -39,4 +40,4 @@ build-backend = "poetry.core.masonry.api"
 [tool.mutmut]
 paths_to_mutate = [ "core/favourites/crud.py", "core/reading_list/crud.py", "core/users/crud.py"]
 tests_dir = [ "tests/" ]
-also_copy = ["config/", "patterns/", "config.yml", "logs", "core/database.py", "core/logging.py", "core/__init__.py", "core/users/models.py", "core/users/schemas.py", "core/users/__init__.py", "core/favourites/models.py", "core/favourites/schemas.py","core/favourites/__init__.py", "core/reading_list/models.py", "core/reading_list/schemas.py", "core/reading_list/__init__.py", "core/catalog/"]
+also_copy = ["config/", "patterns/", "util/", "config.yml", "logs", "core/database.py", "core/logging.py", "core/__init__.py", "core/users/models.py", "core/users/schemas.py", "core/users/__init__.py", "core/favourites/models.py", "core/favourites/schemas.py","core/favourites/__init__.py", "core/reading_list/models.py", "core/reading_list/schemas.py", "core/reading_list/__init__.py", "core/catalog/"]
