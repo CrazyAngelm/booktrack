@@ -56,7 +56,7 @@ cd backend
 echo "> Generating & running mutants"
 poetry run mutmut run
 echo "> Writing mutation report"
-mutmut results > ../docs/quality/maintainability/mutation.txt
+poetry run mutmut results > ../docs/quality/maintainability/mutation.txt
 echo "> Cleaning up mutant files"
 rm -rf mutants/
 cd ..
