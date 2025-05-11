@@ -1,2 +1,1 @@
 Method,Name,Error,Occurrences
-GET,GET /api/books,HTTPError('500 Server Error: Internal Server Error for url: GET /api/books'),3
