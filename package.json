@@ -1,5 +1,5 @@
 {
   "devDependencies": {
-    "@lhci/cli": "^0.7.2"
+    "@lhci/cli": "^0.14.0"
   }
 }
