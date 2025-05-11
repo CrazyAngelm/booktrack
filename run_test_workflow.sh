@@ -74,7 +74,7 @@ poetry run radon mi \
   backend/config \
   backend/main.py \
   frontend/app.py \
-  -s --sort > docs/quality/maintainability/maintainability_index.txt
+  -s --sort | tee docs/quality/maintainability/maintainability_index.txt
 
 echo
 echo "======================================"
@@ -125,7 +125,7 @@ echo "======================================"
 echo "8) Performance testing (Lighthouse)"
 echo "======================================"
 echo "> Installing Lighthouse"
-npm install --save-dev @lhci/cli@0.7
+npm install --save-dev @lhci/cli@0.14
 echo "> Running LHCI against http://localhost:8501"
 npx lhci autorun --config=lighthouserc.json
 
