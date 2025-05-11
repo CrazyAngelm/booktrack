@@ -3,25 +3,25 @@
 [main]	INFO	cli include tests: None
 [main]	INFO	cli exclude tests: None
 [main]	INFO	running on Python 3.11.10
-Run started:2025-05-09 07:46:46.630365
+Run started:2025-05-11 12:47:07.617262
 
 Test results:
 	No issues identified.
 
 Code scanned:
-	Total lines of code: 1519
+	Total lines of code: 1531
 	Total lines skipped (#nosec): 0
 	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 0
 
 Run metrics:
 	Total issues (by severity):
 		Undefined: 0
-		Low: 0
+		Low: 3
 		Medium: 3
 		High: 0
 	Total issues (by confidence):
 		Undefined: 0
 		Low: 3
 		Medium: 0
-		High: 0
+		High: 3
 Files skipped (0):
