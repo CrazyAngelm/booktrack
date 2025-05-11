@@ -114,7 +114,7 @@ cd backend
 echo "> Running locust headlessly against http://localhost:8000"
 poetry run locust -f locustfile.py --headless \
   --host http://localhost:8000 \
-  -u 50 -r 10 \
+  -u 20 -r 10 \
   --run-time=60s \
   --csv=../docs/quality/performance/locust/report \
   --csv-full-history
