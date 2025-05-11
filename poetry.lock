@@ -1492,6 +1492,21 @@ files = [
 ]
 
 [[package]]
+name = "mock-alchemy"
+version = "0.2.6"
+description = "SQLAlchemy mock helpers."
+optional = false
+python-versions = ">=3.7,<4.0"
+groups = ["main"]
+files = [
+    {file = "mock_alchemy-0.2.6-py3-none-any.whl", hash = "sha256:d5e17f2c92d0299d70cd9a0d3c8f96f759a81c285c76b03f4192451583bf865f"},
+    {file = "mock_alchemy-0.2.6.tar.gz", hash = "sha256:807cc2bd7f658fb98292900052eaa6eeb4a65b2d62364e639462480a275299ef"},
+]
+
+[package.dependencies]
+SQLAlchemy = ">=2.0.6,<3.0.0"
+
+[[package]]
 name = "msgpack"
 version = "1.1.0"
 description = "MessagePack serializer"
@@ -3786,4 +3801,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<4.0.0"
-content-hash = "6afce2d5688b2aa5bb4a8a53eb610d97e99842a944d5cd234b84511c8954f552"
+content-hash = "244eeb32fe2b8ed4f675eda20ce7ca23f7f5463780bae0d39ea0a3cf9a941f26"
