@@ -1,16 +1,10 @@
     core.favourites.crud.x_update_favourite__mutmut_1: survived
     core.reading_list.crud.x_get_reading_list_by_user_email__mutmut_1: survived
-    core.reading_list.crud.x_get_reading_list_by_status__mutmut_1: survived
     core.reading_list.crud.x_get_reading_list_by_status__mutmut_2: survived
-    core.reading_list.crud.x_create_reading_list_book__mutmut_10: survived
-    core.reading_list.crud.x_update_reading_list_book__mutmut_1: survived
     core.reading_list.crud.x_update_reading_list_book__mutmut_2: survived
-    core.reading_list.crud.x_update_reading_list_book__mutmut_3: survived
-    core.reading_list.crud.x_update_reading_list_book__mutmut_6: survived
     core.reading_list.crud.x_delete_reading_list_book__mutmut_1: survived
     core.reading_list.crud.x_delete_reading_list_book__mutmut_2: survived
     core.reading_list.crud.x_delete_reading_list_book__mutmut_3: survived
-    core.users.crud.x_get_user_by_email__mutmut_1: survived
     core.users.crud.x_get_user_by_email__mutmut_2: survived
     core.users.crud.x_save_refresh_token__mutmut_2: survived
     core.users.crud.x_save_refresh_token__mutmut_3: survived

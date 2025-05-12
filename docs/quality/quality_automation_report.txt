@@ -1,0 +1,513 @@
+Initializing directories…
+
+======================================
+1) Backend tests + coverage (≥ 65 %)
+======================================
+> Running pytest with coverage on core/
+============================= test session starts ==============================
+platform darwin -- Python 3.11.10, pytest-8.3.5, pluggy-1.5.0
+sensitiveurl: .*
+rootdir: /Users/louayfarah/Documents/SQR_project/final-booktrack/booktrack/backend
+configfile: pyproject.toml
+plugins: anyio-4.9.0, hypothesis-6.131.15, variables-3.1.0, html-4.1.1, metadata-3.1.1, base-url-2.1.0, cov-6.1.1, selenium-4.1.0
+collected 79 items
+
+tests/api/catalog/test_catalog_api.py ..........                         [ 12%]
+tests/api/favourites/test_favourites_api.py ........                     [ 22%]
+tests/api/reading-list/test_reading_list_api.py ...........              [ 36%]
+tests/api/users/test_users_api.py ........                               [ 46%]
+tests/fuzz/test_catalog_fuzz.py ....                                     [ 51%]
+tests/fuzz/test_favourites_fuzz.py .......                               [ 60%]
+tests/fuzz/test_reading_list_fuzz.py ......                              [ 68%]
+tests/fuzz/test_token_fuzz.py .                                          [ 69%]
+tests/unit/test_favourites.py ...........                                [ 83%]
+tests/unit/test_logging.py .                                             [ 84%]
+tests/unit/test_reading_list.py ......                                   [ 92%]
+tests/unit/test_users.py ......                                          [100%]
+
+================================ tests coverage ================================
+______________ coverage: platform darwin, python 3.11.10-final-0 _______________
+
+Name                            Stmts   Miss Branch BrPart  Cover
+-----------------------------------------------------------------
+core/__init__.py                    1      0      0      0   100%
+core/catalog/__init__.py            3      0      0      0   100%
+core/catalog/crud.py               26      3      4      1    87%
+core/catalog/models.py             18      0      0      0   100%
+core/catalog/schemas.py            26      2      0      0    92%
+core/database.py                    7      0      0      0   100%
+core/favourites/__init__.py         3      0      0      0   100%
+core/favourites/crud.py            25      0      6      0   100%
+core/favourites/models.py           8      0      0      0   100%
+core/favourites/schemas.py         14      1      0      0    93%
+core/logging.py                     8      0      0      0   100%
+core/reading_list/__init__.py       3      0      0      0   100%
+core/reading_list/crud.py          33      0      4      2    95%
+core/reading_list/models.py        15      0      0      0   100%
+core/reading_list/schemas.py       18      1      0      0    94%
+core/users/__init__.py              3      0      0      0   100%
+core/users/crud.py                 26      5      6      1    75%
+core/users/models.py               20      0      0      0   100%
+core/users/schemas.py              22      0      0      0   100%
+-----------------------------------------------------------------
+TOTAL                             279     12     20      4    94%
+Coverage HTML written to dir htmlcov
+Required test coverage of 65% reached. Total coverage: 93.98%
+============================= 79 passed in 19.48s ==============================
+
+======================================
+Fuzz Tests (Hypothesis)
+======================================
+..................                                                       [100%]
+18 passed in 5.52s
+
+======================================
+2) Frontend tests + coverage (≥ 60 %)
+======================================
+> Running pytest with coverage on app/
+============================= test session starts ==============================
+platform darwin -- Python 3.11.10, pytest-8.3.5, pluggy-1.5.0
+sensitiveurl: .*
+rootdir: /Users/louayfarah/Documents/SQR_project/final-booktrack/booktrack/frontend
+configfile: pyproject.toml
+plugins: anyio-4.9.0, hypothesis-6.131.15, variables-3.1.0, html-4.1.1, metadata-3.1.1, base-url-2.1.0, cov-6.1.1, selenium-4.1.0
+collected 22 items
+
+tests/unit/test_app.py ......................                            [100%]
+
+=============================== warnings summary ===============================
+../sqr-projet-venv/lib/python3.11/site-packages/streamlit/elements/vega_charts.py:368
+  /Users/louayfarah/Documents/SQR_project/final-booktrack/booktrack/sqr-projet-venv/lib/python3.11/site-packages/streamlit/elements/vega_charts.py:368: AltairDeprecationWarning: 
+  Deprecated since `altair=5.5.0`. Use altair.theme instead.
+  Most cases require only the following change:
+  
+      # Deprecated
+      alt.themes.enable('quartz')
+  
+      # Updated
+      alt.theme.enable('quartz')
+  
+  If your code registers a theme, make the following change:
+  
+      # Deprecated
+      def custom_theme():
+          return {'height': 400, 'width': 700}
+      alt.themes.register('theme_name', custom_theme)
+      alt.themes.enable('theme_name')
+  
+      # Updated
+      @alt.theme.register('theme_name', enable=True)
+      def custom_theme():
+          return alt.theme.ThemeConfig(
+              {'height': 400, 'width': 700}
+          )
+  
+  See the updated User Guide for further details:
+      https://altair-viz.github.io/user_guide/api.html#theme
+      https://altair-viz.github.io/user_guide/customization.html#chart-themes
+    with alt.themes.enable("none") if alt.themes.active == "default" else nullcontext():  # type: ignore[attr-defined,unused-ignore]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+================================ tests coverage ================================
+______________ coverage: platform darwin, python 3.11.10-final-0 _______________
+
+Name                     Stmts   Miss Branch BrPart  Cover
+----------------------------------------------------------
+__init__.py                  0      0      0      0   100%
+app.py                     371    174    102     17    49%
+tests/__init__.py            0      0      0      0   100%
+tests/unit/__init__.py       0      0      0      0   100%
+tests/unit/test_app.py     151      0      4      0   100%
+----------------------------------------------------------
+TOTAL                      522    174    106     17    62%
+Coverage HTML written to dir htmlcov
+Required test coverage of 60% reached. Total coverage: 61.94%
+======================== 22 passed, 1 warning in 1.49s =========================
+
+======================================
+3) Mutation testing (mutmut)
+======================================
+> Generating & running mutants
+⠋ Generating mutants⠙ Generating mutants⠹ Generating mutants⠸ Generating mutants⠼ Generating mutants⠴ Generating mutants⠦ Generating mutants⠧ Generating mutants⠇ Generating mutants⠏ Generating mutants⠋ Generating mutants⠙ Generating mutants⠹ Generating mutants⠸ Generating mutants⠼ Generating mutants⠴ Generating mutants⠦ Generating mutants⠧ Generating mutants⠇ Generating mutants⠏ Generating mutants⠋ Generating mutants⠙ Generating mutants⠹ Generating mutants⠸ Generating mutants⠼ Generating mutants⠴ Generating mutants⠦ Generating mutants⠧ Generating mutants⠇ Generating mutants⠏ Generating mutants⠋ Generating mutants⠙ Generating mutants⠹ Generating mutants⠸ Generating mutants⠼ Generating mutants⠴ Generating mutants⠦ Generating mutants⠧ Generating mutants⠇ Generating mutants⠏ Generating mutants⠋ Generating mutants⠙ Generating mutants⠹ Generating mutants⠸ Generating mutants⠼ Generating mutants⠴ Generating mutants⠦ Generating mutants⠧ Generating mutants⠇ Generating mutants⠏ Generating mutants⠋ Generating mutants⠙ Generating mutants⠹ Generating mutants⠸ Generating mutants⠼ Generating mutants⠴ Generating mutants⠦ Generating mutants⠧ Generating mutants⠇ Generating mutants⠏ Generating mutants⠋ Generating mutants⠙ Generating mutants⠹ Generating mutants⠸ Generating mutants⠼ Generating mutants⠴ Generating mutants⠦ Generating mutants⠧ Generating mutants⠇ Generating mutants⠏ Generating mutants⠋ Generating mutants⠙ Generating mutants⠹ Generating mutants⠸ Generating mutants⠼ Generating mutants⠴ Generating mutants⠦ Generating mutants⠧ Generating mutants⠇ Generating mutants⠏ Generating mutants⠋ Generating mutants⠙ Generating mutants⠹ Generating mutants⠸ Generating mutants⠼ Generating mutants⠴ Generating mutants⠦ Generating mutants⠧ Generating mutants⠇ Generating mutants⠏ Generating mutants⠋ Generating mutants⠙ Generating mutants⠹ Generating mutants⠸ Generating mutants⠼ Generating mutants
+    done in 71ms
+⠴ Running stats     ⠦ Running stats⠧ Running stats⠇ Running stats⠏ Running stats⠋ Running stats⠙ Running stats⠹ Running stats⠸ Running stats⠼ Running stats⠴ Running stats⠦ Running stats⠧ Running stats⠇ Running stats⠏ Running stats⠋ Running stats⠙ Running stats⠹ Running stats⠸ Running stats⠼ Running stats⠴ Running stats⠦ Running stats⠧ Running stats⠇ Running stats⠏ Running stats⠋ Running stats⠙ Running stats⠹ Running stats⠸ Running stats⠼ Running stats⠴ Running stats⠦ Running stats⠧ Running stats⠇ Running stats⠏ Running stats⠋ Running stats⠙ Running stats⠹ Running stats⠸ Running stats⠼ Running stats⠴ Running stats⠦ Running stats⠧ Running stats⠇ Running stats⠏ Running stats⠋ Running stats⠙ Running stats⠹ Running stats⠸ Running stats⠼ Running stats⠴ Running stats⠦ Running stats⠧ Running stats⠇ Running stats⠏ Running stats⠋ Running stats⠙ Running stats⠹ Running stats⠸ Running stats⠼ Running stats⠴ Running stats⠦ Running stats⠧ Running stats⠇ Running stats⠏ Running stats⠋ Running stats⠙ Running stats⠹ Running stats⠸ Running stats⠼ Running stats⠴ Running stats⠦ Running stats⠧ Running stats⠇ Running stats⠏ Running stats⠋ Running stats⠙ Running stats⠹ Running stats⠸ Running stats⠼ Running stats⠴ Running stats⠦ Running stats⠧ Running stats⠇ Running stats⠏ Running stats
+    done
+⠋ Running clean tests⠙ Running clean tests⠹ Running clean tests⠸ Running clean tests⠼ Running clean tests⠴ Running clean tests⠦ Running clean tests⠧ Running clean tests⠇ Running clean tests⠏ Running clean tests⠋ Running clean tests⠙ Running clean tests⠹ Running clean tests⠸ Running clean tests⠼ Running clean tests⠴ Running clean tests⠦ Running clean tests⠧ Running clean tests⠇ Running clean tests⠏ Running clean tests⠋ Running clean tests⠙ Running clean tests⠹ Running clean tests⠸ Running clean tests⠼ Running clean tests⠴ Running clean tests⠦ Running clean tests⠧ Running clean tests⠇ Running clean tests⠏ Running clean tests⠋ Running clean tests⠙ Running clean tests⠹ Running clean tests⠸ Running clean tests⠼ Running clean tests⠴ Running clean tests⠦ Running clean tests⠧ Running clean tests⠇ Running clean tests⠏ Running clean tests⠋ Running clean tests⠙ Running clean tests⠹ Running clean tests⠸ Running clean tests⠼ Running clean tests⠴ Running clean tests⠦ Running clean tests⠧ Running clean tests⠇ Running clean tests⠏ Running clean tests⠋ Running clean tests⠙ Running clean tests⠹ Running clean tests⠸ Running clean tests⠼ Running clean tests⠴ Running clean tests⠦ Running clean tests⠧ Running clean tests⠇ Running clean tests⠏ Running clean tests⠋ Running clean tests⠙ Running clean tests⠹ Running clean tests⠸ Running clean tests⠼ Running clean tests⠴ Running clean tests⠦ Running clean tests⠧ Running clean tests⠇ Running clean tests⠏ Running clean tests⠋ Running clean tests⠙ Running clean tests⠹ Running clean tests⠸ Running clean tests⠼ Running clean tests⠴ Running clean tests⠦ Running clean tests⠧ Running clean tests⠇ Running clean tests⠏ Running clean tests⠋ Running clean tests⠙ Running clean tests⠹ Running clean tests⠸ Running clean tests⠼ Running clean tests
+    done
+⠴ Running forced fail test⠦ Running forced fail test⠧ Running forced fail test⠇ Running forced fail test⠏ Running forced fail test⠋ Running forced fail test⠙ Running forced fail test⠹ Running forced fail test⠸ Running forced fail test⠼ Running forced fail test⠴ Running forced fail test⠦ Running forced fail test⠧ Running forced fail test⠇ Running forced fail test⠏ Running forced fail test⠋ Running forced fail test⠙ Running forced fail test⠹ Running forced fail test⠸ Running forced fail test⠼ Running forced fail test⠴ Running forced fail test⠦ Running forced fail test⠧ Running forced fail test⠇ Running forced fail test⠏ Running forced fail test⠋ Running forced fail test⠙ Running forced fail test⠹ Running forced fail test⠸ Running forced fail test⠼ Running forced fail test⠴ Running forced fail test⠦ Running forced fail test⠧ Running forced fail test⠇ Running forced fail test⠏ Running forced fail test⠋ Running forced fail test⠙ Running forced fail test⠹ Running forced fail test⠸ Running forced fail test⠼ Running forced fail test⠴ Running forced fail test⠦ Running forced fail test⠧ Running forced fail test⠇ Running forced fail test⠏ Running forced fail test⠋ Running forced fail test⠙ Running forced fail test⠹ Running forced fail test⠸ Running forced fail test⠼ Running forced fail test⠴ Running forced fail test⠦ Running forced fail test⠧ Running forced fail test⠇ Running forced fail test⠏ Running forced fail test⠋ Running forced fail test⠙ Running forced fail test⠹ Running forced fail test⠸ Running forced fail test⠼ Running forced fail test⠴ Running forced fail test⠦ Running forced fail test⠧ Running forced fail test⠇ Running forced fail test⠏ Running forced fail test⠋ Running forced fail test⠙ Running forced fail test⠹ Running forced fail test⠸ Running forced fail test⠼ Running forced fail test⠴ Running forced fail test⠦ Running forced fail test⠧ Running forced fail test⠇ Running forced fail test⠏ Running forced fail test⠋ Running forced fail test⠙ Running forced fail test⠹ Running forced fail test⠸ Running forced fail test⠼ Running forced fail test⠴ Running forced fail test⠦ Running forced fail test⠧ Running forced fail test⠇ Running forced fail test⠏ Running forced fail test⠋ Running forced fail test⠙ Running forced fail test⠹ Running forced fail test⠸ Running forced fail test⠼ Running forced fail test⠴ Running forced fail test⠦ Running forced fail test⠧ Running forced fail test⠇ Running forced fail test⠏ Running forced fail test⠋ Running forced fail test⠙ Running forced fail test⠹ Running forced fail test⠸ Running forced fail test⠼ Running forced fail test⠴ Running forced fail test⠦ Running forced fail test⠧ Running forced fail test⠇ Running forced fail test⠏ Running forced fail test⠋ Running forced fail test⠙ Running forced fail test⠹ Running forced fail test⠸ Running forced fail test⠼ Running forced fail test⠴ Running forced fail test⠦ Running forced fail test⠧ Running forced fail test⠇ Running forced fail test⠏ Running forced fail test
+    done
+Running mutation testing
+⠋ 0/82  🎉 0 🫥 0  ⏰ 0  🤔 0  🙁 0  🔇 0⠙ 1/82  🎉 0 🫥 1  ⏰ 0  🤔 0  🙁 0  🔇 0⠹ 2/82  🎉 0 🫥 2  ⏰ 0  🤔 0  🙁 0  🔇 0⠸ 3/82  🎉 0 🫥 3  ⏰ 0  🤔 0  🙁 0  🔇 0⠼ 4/82  🎉 0 🫥 4  ⏰ 0  🤔 0  🙁 0  🔇 0⠴ 4/82  🎉 0 🫥 4  ⏰ 0  🤔 0  🙁 0  🔇 0⠦ 4/82  🎉 0 🫥 4  ⏰ 0  🤔 0  🙁 0  🔇 0⠧ 4/82  🎉 0 🫥 4  ⏰ 0  🤔 0  🙁 0  🔇 0⠇ 4/82  🎉 0 🫥 4  ⏰ 0  🤔 0  🙁 0  🔇 0⠏ 4/82  🎉 0 🫥 4  ⏰ 0  🤔 0  🙁 0  🔇 0⠋ 4/82  🎉 0 🫥 4  ⏰ 0  🤔 0  🙁 0  🔇 0⠙ 4/82  🎉 0 🫥 4  ⏰ 0  🤔 0  🙁 0  🔇 0⠹ 4/82  🎉 0 🫥 4  ⏰ 0  🤔 0  🙁 0  🔇 0⠸ 4/82  🎉 0 🫥 4  ⏰ 0  🤔 0  🙁 0  🔇 0⠼ 4/82  🎉 0 🫥 4  ⏰ 0  🤔 0  🙁 0  🔇 0⠴ 5/82  🎉 0 🫥 4  ⏰ 0  🤔 0  🙁 1  🔇 0⠦ 6/82  🎉 0 🫥 4  ⏰ 0  🤔 0  🙁 2  🔇 0⠧ 7/82  🎉 0 🫥 4  ⏰ 0  🤔 0  🙁 3  🔇 0⠇ 8/82  🎉 1 🫥 4  ⏰ 0  🤔 0  🙁 3  🔇 0⠏ 9/82  🎉 2 🫥 4  ⏰ 0  🤔 0  🙁 3  🔇 0⠋ 10/82  🎉 3 🫥 4  ⏰ 0  🤔 0  🙁 3  🔇 0⠙ 11/82  🎉 4 🫥 4  ⏰ 0  🤔 0  🙁 3  🔇 0⠹ 12/82  🎉 5 🫥 4  ⏰ 0  🤔 0  🙁 3  🔇 0⠸ 13/82  🎉 6 🫥 4  ⏰ 0  🤔 0  🙁 3  🔇 0⠼ 14/82  🎉 7 🫥 4  ⏰ 0  🤔 0  🙁 3  🔇 0⠴ 15/82  🎉 8 🫥 4  ⏰ 0  🤔 0  🙁 3  🔇 0⠦ 16/82  🎉 9 🫥 4  ⏰ 0  🤔 0  🙁 3  🔇 0⠧ 17/82  🎉 10 🫥 4  ⏰ 0  🤔 0  🙁 3  🔇 0⠇ 18/82  🎉 11 🫥 4  ⏰ 0  🤔 0  🙁 3  🔇 0⠏ 19/82  🎉 11 🫥 4  ⏰ 0  🤔 0  🙁 4  🔇 0⠋ 20/82  🎉 11 🫥 4  ⏰ 0  🤔 0  🙁 5  🔇 0⠙ 21/82  🎉 11 🫥 4  ⏰ 0  🤔 0  🙁 6  🔇 0⠹ 22/82  🎉 11 🫥 4  ⏰ 0  🤔 0  🙁 7  🔇 0⠸ 23/82  🎉 12 🫥 4  ⏰ 0  🤔 0  🙁 7  🔇 0⠼ 24/82  🎉 13 🫥 4  ⏰ 0  🤔 0  🙁 7  🔇 0⠴ 25/82  🎉 13 🫥 4  ⏰ 0  🤔 0  🙁 8  🔇 0⠦ 26/82  🎉 13 🫥 4  ⏰ 0  🤔 0  🙁 9  🔇 0⠧ 27/82  🎉 14 🫥 4  ⏰ 0  🤔 0  🙁 9  🔇 0⠇ 28/82  🎉 15 🫥 4  ⏰ 0  🤔 0  🙁 9  🔇 0⠏ 29/82  🎉 16 🫥 4  ⏰ 0  🤔 0  🙁 9  🔇 0⠋ 30/82  🎉 17 🫥 4  ⏰ 0  🤔 0  🙁 9  🔇 0⠙ 31/82  🎉 18 🫥 4  ⏰ 0  🤔 0  🙁 9  🔇 0⠹ 32/82  🎉 19 🫥 4  ⏰ 0  🤔 0  🙁 9  🔇 0⠸ 33/82  🎉 20 🫥 4  ⏰ 0  🤔 0  🙁 9  🔇 0⠼ 34/82  🎉 21 🫥 4  ⏰ 0  🤔 0  🙁 9  🔇 0⠴ 35/82  🎉 22 🫥 4  ⏰ 0  🤔 0  🙁 9  🔇 0⠦ 36/82  🎉 23 🫥 4  ⏰ 0  🤔 0  🙁 9  🔇 0⠧ 37/82  🎉 24 🫥 4  ⏰ 0  🤔 0  🙁 9  🔇 0⠇ 38/82  🎉 25 🫥 4  ⏰ 0  🤔 0  🙁 9  🔇 0⠏ 39/82  🎉 26 🫥 4  ⏰ 0  🤔 0  🙁 9  🔇 0⠋ 40/82  🎉 27 🫥 4  ⏰ 0  🤔 0  🙁 9  🔇 0⠙ 41/82  🎉 27 🫥 4  ⏰ 0  🤔 0  🙁 10  🔇 0⠹ 42/82  🎉 27 🫥 4  ⏰ 0  🤔 0  🙁 11  🔇 0⠸ 43/82  🎉 27 🫥 4  ⏰ 0  🤔 0  🙁 12  🔇 0⠼ 44/82  🎉 27 🫥 4  ⏰ 0  🤔 0  🙁 13  🔇 0⠴ 45/82  🎉 27 🫥 4  ⏰ 0  🤔 0  🙁 14  🔇 0⠦ 46/82  🎉 27 🫥 4  ⏰ 0  🤔 0  🙁 15  🔇 0⠧ 47/82  🎉 28 🫥 4  ⏰ 0  🤔 0  🙁 15  🔇 0⠇ 48/82  🎉 29 🫥 4  ⏰ 0  🤔 0  🙁 15  🔇 0⠏ 49/82  🎉 29 🫥 4  ⏰ 0  🤔 0  🙁 16  🔇 0⠋ 50/82  🎉 29 🫥 4  ⏰ 0  🤔 0  🙁 17  🔇 0⠙ 51/82  🎉 29 🫥 4  ⏰ 0  🤔 0  🙁 18  🔇 0⠹ 52/82  🎉 29 🫥 4  ⏰ 0  🤔 0  🙁 19  🔇 0⠸ 53/82  🎉 30 🫥 4  ⏰ 0  🤔 0  🙁 19  🔇 0⠼ 54/82  🎉 31 🫥 4  ⏰ 0  🤔 0  🙁 19  🔇 0⠴ 55/82  🎉 32 🫥 4  ⏰ 0  🤔 0  🙁 19  🔇 0⠦ 56/82  🎉 32 🫥 4  ⏰ 0  🤔 0  🙁 20  🔇 0⠧ 57/82  🎉 33 🫥 4  ⏰ 0  🤔 0  🙁 20  🔇 0⠇ 58/82  🎉 34 🫥 4  ⏰ 0  🤔 0  🙁 20  🔇 0⠏ 59/82  🎉 35 🫥 4  ⏰ 0  🤔 0  🙁 20  🔇 0⠋ 60/82  🎉 36 🫥 4  ⏰ 0  🤔 0  🙁 20  🔇 0⠙ 61/82  🎉 37 🫥 4  ⏰ 0  🤔 0  🙁 20  🔇 0⠹ 62/82  🎉 38 🫥 4  ⏰ 0  🤔 0  🙁 20  🔇 0⠸ 63/82  🎉 38 🫥 4  ⏰ 0  🤔 0  🙁 21  🔇 0⠼ 64/82  🎉 39 🫥 4  ⏰ 0  🤔 0  🙁 21  🔇 0⠴ 65/82  🎉 40 🫥 4  ⏰ 0  🤔 0  🙁 21  🔇 0⠦ 66/82  🎉 41 🫥 4  ⏰ 0  🤔 0  🙁 21  🔇 0⠧ 67/82  🎉 42 🫥 4  ⏰ 0  🤔 0  🙁 21  🔇 0⠇ 68/82  🎉 43 🫥 4  ⏰ 0  🤔 0  🙁 21  🔇 0⠏ 69/82  🎉 44 🫥 4  ⏰ 0  🤔 0  🙁 21  🔇 0⠋ 70/82  🎉 45 🫥 4  ⏰ 0  🤔 0  🙁 21  🔇 0⠙ 71/82  🎉 46 🫥 4  ⏰ 0  🤔 0  🙁 21  🔇 0⠹ 82/82  🎉 57 🫥 4  ⏰ 0  🤔 0  🙁 21  🔇 0
+7.06 mutations/second
+> Writing mutation report
+> Cleaning up mutant files
+
+=======================================================
+4) Maintainability Index (radon) for backend & frontend
+=======================================================
+> Calculating MI on backend/core, routers, services, util, config, main.py and frontend/app.py
+frontend/app.py - A (25.92)
+backend/core/reading_list/crud.py - A (52.80)
+backend/util/users.py - A (55.40)
+backend/core/catalog/schemas.py - A (55.86)
+backend/core/users/crud.py - A (56.30)
+backend/core/favourites/crud.py - A (56.64)
+backend/util/token.py - A (56.89)
+backend/routers/users.py - A (57.92)
+backend/core/users/schemas.py - A (58.10)
+backend/routers/catalog.py - A (59.79)
+backend/routers/reading_list.py - A (61.29)
+backend/services/catalog.py - A (65.91)
+backend/routers/favourites.py - A (66.68)
+backend/util/auth.py - A (66.83)
+backend/core/catalog/crud.py - A (68.06)
+backend/core/logging.py - A (100.00)
+backend/core/database.py - A (100.00)
+backend/core/__init__.py - A (100.00)
+backend/core/reading_list/models.py - A (100.00)
+backend/core/reading_list/__init__.py - A (100.00)
+backend/core/reading_list/schemas.py - A (100.00)
+backend/core/catalog/models.py - A (100.00)
+backend/core/catalog/__init__.py - A (100.00)
+backend/core/favourites/models.py - A (100.00)
+backend/core/favourites/__init__.py - A (100.00)
+backend/core/favourites/schemas.py - A (100.00)
+backend/core/users/models.py - A (100.00)
+backend/core/users/__init__.py - A (100.00)
+backend/routers/__init__.py - A (100.00)
+backend/services/favourites.py - A (100.00)
+backend/services/users.py - A (100.00)
+backend/services/reading_list.py - A (100.00)
+backend/services/__init__.py - A (100.00)
+backend/util/__init__.py - A (100.00)
+backend/config/config.py - A (100.00)
+backend/config/__init__.py - A (100.00)
+backend/main.py - A (100.00)
+
+======================================
+5) Linting with Ruff (no F401, F403)
+======================================
+> Running ruff check on the same files
+All checks passed!
+
+======================================
+6) Linting with Flake8 (max 100 cols)
+======================================
+> Running flake8 with ignores and max-line-length=100
+
+======================================
+7) Performance testing (Locust)
+======================================
+> Running locust headlessly against http://localhost:8000
+[2025-05-12 13:15:30,057] Louays-MacBook-Pro/INFO/locust.main: Starting Locust 2.37.1
+[2025-05-12 13:15:30,063] Louays-MacBook-Pro/INFO/locust.main: Run time limit set to 60 seconds
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                         0     0(0.00%) |      0       0       0      0 |    0.00        0.00
+
+[2025-05-12 13:15:30,065] Louays-MacBook-Pro/INFO/locust.runners: Ramping to 10 users at a rate of 5.00 per second
+[2025-05-12 13:15:31,073] Louays-MacBook-Pro/INFO/locust.runners: All users spawned: {"BookTrackUser": 10} (10 total users)
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                     2     0(0.00%) |     26      13      38     14 |    0.00        0.00
+GET      GET /api/books/book-id/:id                                                         2     0(0.00%) |    711     708     715    710 |    0.00        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                         4     0(0.00%) |    369      13     715     39 |    0.00        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                     8     0(0.00%) |   2214      13    3417   2700 |    1.00        0.00
+GET      GET /api/books/book-id/:id                                                         2     0(0.00%) |    711     708     715    710 |    0.00        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        10     0(0.00%) |   1913      13    3417   2700 |    1.00        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                     8     0(0.00%) |   2214      13    3417   2700 |    1.00        0.00
+GET      GET /api/books/book-id/:id                                                         2     0(0.00%) |    711     708     715    710 |    0.00        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        10     0(0.00%) |   1913      13    3417   2700 |    1.00        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                     8     0(0.00%) |   2214      13    3417   2700 |    1.60        0.00
+GET      GET /api/books/book-id/:id                                                         3     0(0.00%) |    618     433     715    710 |    0.40        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        11     0(0.00%) |   1779      13    3417   2700 |    2.00        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    10     0(0.00%) |   1776      13    3417   2700 |    1.00        0.00
+GET      GET /api/books/book-id/:id                                                         5     0(0.00%) |    540     418     715    430 |    0.38        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        15     0(0.00%) |   1364      13    3417    710 |    1.38        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    12     0(0.00%) |   1484      13    3417     39 |    1.00        0.00
+GET      GET /api/books/book-id/:id                                                         7     0(0.00%) |    445      12     715    430 |    0.33        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        19     0(0.00%) |   1101      12    3417    430 |    1.33        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    13     0(0.00%) |   1372      13    3417     39 |    1.00        0.00
+GET      GET /api/books/book-id/:id                                                         7     0(0.00%) |    445      12     715    430 |    0.70        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        20     0(0.00%) |   1047      12    3417    420 |    1.70        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    14     0(0.00%) |   1275      13    3417     33 |    0.80        0.00
+GET      GET /api/books/book-id/:id                                                         8     0(0.00%) |    444      12     715    430 |    0.50        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        22     0(0.00%) |    973      12    3417    420 |    1.30        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    15     0(0.00%) |   1192      13    3417     33 |    0.60        0.00
+GET      GET /api/books/book-id/:id                                                         9     0(0.00%) |    397      12     715    430 |    0.50        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        24     0(0.00%) |    894      12    3417    410 |    1.10        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    15     0(0.00%) |   1192      13    3417     33 |    0.60        0.00
+GET      GET /api/books/book-id/:id                                                        11     0(0.00%) |    327      10     715    420 |    0.60        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        26     0(0.00%) |    826      10    3417     39 |    1.20        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    16     0(0.00%) |   1119      13    3417     27 |    0.60        0.00
+GET      GET /api/books/book-id/:id                                                        15     0(0.00%) |    355      10     715    420 |    0.80        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        31     0(0.00%) |    749      10    3417    410 |    1.40        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    17     0(0.00%) |   1055      13    3417     27 |    0.50        0.00
+GET      GET /api/books/book-id/:id                                                        15     0(0.00%) |    355      10     715    420 |    0.60        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        32     0(0.00%) |    727      10    3417    410 |    1.10        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    20     0(0.00%) |    899      13    3417     25 |    0.40        0.00
+GET      GET /api/books/book-id/:id                                                        15     0(0.00%) |    355      10     715    420 |    0.80        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        35     0(0.00%) |    666      10    3417     39 |    1.20        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    22     0(0.00%) |    819      13    3417     24 |    0.40        0.00
+GET      GET /api/books/book-id/:id                                                        16     0(0.00%) |    334      10     715    410 |    0.80        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        38     0(0.00%) |    615      10    3417     27 |    1.20        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    24     0(0.00%) |    753      13    3417     24 |    0.70        0.00
+GET      GET /api/books/book-id/:id                                                        17     0(0.00%) |    338      10     715    410 |    0.60        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        41     0(0.00%) |    581      10    3417     27 |    1.30        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    24     0(0.00%) |    753      13    3417     24 |    0.70        0.00
+GET      GET /api/books/book-id/:id                                                        17     0(0.00%) |    338      10     715    410 |    0.60        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        41     0(0.00%) |    581      10    3417     27 |    1.30        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    26     0(0.00%) |    697      13    3417     24 |    0.80        0.00
+GET      GET /api/books/book-id/:id                                                        18     0(0.00%) |    320      10     715    410 |    0.20        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        44     0(0.00%) |    543      10    3417     25 |    1.00        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    30     0(0.00%) |    606      12    3417     24 |    0.90        0.00
+GET      GET /api/books/book-id/:id                                                        18     0(0.00%) |    320      10     715    410 |    0.20        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        48     0(0.00%) |    499      10    3417     24 |    1.10        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    31     0(0.00%) |    588      12    3417     24 |    1.00        0.00
+GET      GET /api/books/book-id/:id                                                        20     0(0.00%) |    312      10     715    410 |    0.30        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        51     0(0.00%) |    479      10    3417     24 |    1.30        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    31     0(0.00%) |    588      12    3417     24 |    1.00        0.00
+GET      GET /api/books/book-id/:id                                                        21     0(0.00%) |    317      10     715    410 |    0.30        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        52     0(0.00%) |    478      10    3417     24 |    1.30        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    34     0(0.00%) |    538      12    3417     24 |    0.90        0.00
+GET      GET /api/books/book-id/:id                                                        21     0(0.00%) |    317      10     715    410 |    0.30        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        55     0(0.00%) |    453      10    3417     24 |    1.20        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    35     0(0.00%) |    523      12    3417     24 |    0.70        0.00
+GET      GET /api/books/book-id/:id                                                        23     0(0.00%) |    308      10     715    410 |    0.40        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        58     0(0.00%) |    438      10    3417     24 |    1.10        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    37     0(0.00%) |    496      12    3417     24 |    0.90        0.00
+GET      GET /api/books/book-id/:id                                                        24     0(0.00%) |    312      10     715    410 |    0.40        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        61     0(0.00%) |    424      10    3417     24 |    1.30        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    37     0(0.00%) |    496      12    3417     24 |    0.90        0.00
+GET      GET /api/books/book-id/:id                                                        24     0(0.00%) |    312      10     715    410 |    0.40        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        61     0(0.00%) |    424      10    3417     24 |    1.30        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    40     0(0.00%) |    460       9    3417     24 |    0.60        0.00
+GET      GET /api/books/book-id/:id                                                        24     0(0.00%) |    312      10     715    410 |    0.60        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        64     0(0.00%) |    405       9    3417     24 |    1.20        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    45     0(0.00%) |    411       9    3417     23 |    0.90        0.00
+GET      GET /api/books/book-id/:id                                                        24     0(0.00%) |    312      10     715    410 |    0.30        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        69     0(0.00%) |    377       9    3417     24 |    1.20        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    47     0(0.00%) |    394       9    3417     23 |    1.30        0.00
+GET      GET /api/books/book-id/:id                                                        24     0(0.00%) |    312      10     715    410 |    0.30        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        71     0(0.00%) |    367       9    3417     24 |    1.60        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    47     0(0.00%) |    394       9    3417     23 |    1.30        0.00
+GET      GET /api/books/book-id/:id                                                        24     0(0.00%) |    312      10     715    410 |    0.30        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        71     0(0.00%) |    367       9    3417     24 |    1.60        0.00
+
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    50     0(0.00%) |    371       9    3417     23 |    1.10        0.00
+GET      GET /api/books/book-id/:id                                                        24     0(0.00%) |    312      10     715    410 |    0.00        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        74     0(0.00%) |    352       9    3417     24 |    1.10        0.00
+
+[2025-05-12 13:16:30,052] Louays-MacBook-Pro/INFO/locust.main: --run-time limit reached, shutting down
+[2025-05-12 13:16:30,100] Louays-MacBook-Pro/INFO/locust.main: Shutting down (exit code 0)
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /api/books                                                                    53     0(0.00%) |    351       9    3417     22 |    0.88        0.00
+GET      GET /api/books/book-id/:id                                                        26     0(0.00%) |    305      10     715    410 |    0.43        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                        79     0(0.00%) |    336       9    3417     23 |    1.32        0.00
+
+Response time percentiles (approximated)
+Type     Name                                                                                  50%    66%    75%    80%    90%    95%    98%    99%  99.9% 99.99%   100% # reqs
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+GET      GET /api/books                                                                         22     24     25     27   2700   2800   3100   3400   3400   3400   3400     53
+GET      GET /api/books/book-id/:id                                                            410    420    430    440    460    710    720    720    720    720    720     26
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+         Aggregated                                                                             23     29    410    420    710   2800   3100   3400   3400   3400   3400     79
+
+User with email john@gmail.com registered successfully.
+
+======================================
+8) Performance testing (Lighthouse)
+======================================
+> Installing Lighthouse
+
+up to date, audited 345 packages in 3s
+
+30 packages are looking for funding
+  run `npm fund` for details
+
+5 low severity vulnerabilities
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+> Running LHCI against http://localhost:8501
+(node:28701) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+✅  .lighthouseci/ directory writable
+✅  Configuration file found
+✅  Chrome installation found
+⚠️   GitHub token not set
+Healthcheck passed!
+
+(node:28755) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Running Lighthouse 3 time(s) on http://localhost:8501
+Run #1...done.
+Run #2...done.
+Run #3...done.
+Done running Lighthouse!
+
+Checking assertions against 1 URL(s), 3 total run(s)
+
+All results processed!
+(node:29110) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+Dumping 3 reports to disk at /Users/louayfarah/Documents/SQR_project/final-booktrack/booktrack/docs/quality/performance/lighthouse...
+(node:29111) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Done writing reports to disk.
+
+Done running autorun.
+(node:28700) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+======================================
+9) Static security scan (Bandit)
+======================================
+> Running bandit and saving output to docs/quality/security/bandit.txt
+[main]	INFO	profile include tests: None
+[main]	INFO	profile exclude tests: None
+[main]	INFO	cli include tests: None
+[main]	INFO	cli exclude tests: None
+[main]	INFO	running on Python 3.11.10
+Run started:2025-05-12 10:17:20.195377
+
+Test results:
+	No issues identified.
+
+Code scanned:
+	Total lines of code: 1531
+	Total lines skipped (#nosec): 0
+	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 0
+
+Run metrics:
+	Total issues (by severity):
+		Undefined: 0
+		Low: 3
+		Medium: 3
+		High: 0
+	Total issues (by confidence):
+		Undefined: 0
+		Low: 3
+		Medium: 0
+		High: 3
+Files skipped (0):
+
+All quality checks completed successfully!

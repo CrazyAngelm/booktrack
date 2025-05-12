@@ -55,4 +55,4 @@ tests/unit/test_app.py     151      0      4      0   100%
 TOTAL                      522    174    106     17    62%
 Coverage HTML written to dir htmlcov
 Required test coverage of 60% reached. Total coverage: 61.94%
-======================== 22 passed, 1 warning in 1.46s =========================
+======================== 22 passed, 1 warning in 1.49s =========================

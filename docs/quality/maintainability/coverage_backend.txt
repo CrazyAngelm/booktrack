@@ -47,4 +47,4 @@ core/users/schemas.py              22      0      0      0   100%
 TOTAL                             279     12     20      4    94%
 Coverage HTML written to dir htmlcov
 Required test coverage of 65% reached. Total coverage: 93.98%
-============================= 79 passed in 40.60s ==============================
+============================= 79 passed in 19.48s ==============================
