@@ -1,0 +1,153 @@
+(.venv) PS E:\Projects\SQRs\booktrack> pytest --cov=app --cov-report=html
+================================================ test session starts =================================================
+platform win32 -- Python 3.11.9, pytest-8.3.5, pluggy-1.5.0
+sensitiveurl: .*
+rootdir: E:\Projects\SQRs\booktrack
+configfile: pyproject.toml
+plugins: anyio-4.9.0, hypothesis-6.131.15, base-url-2.1.0, cov-6.1.1, html-4.1.1, metadata-3.1.1, selenium-4.1.0, variables-3.1.0
+collected 59 items / 8 errors                                                                                          
+E:\Projects\SQRs\booktrack\.venv\Lib\site-packages\coverage\inorout.py:509: CoverageWarning: Module app was never imported. (module-not-imported)
+  self.warn(f"Module {pkg} was never imported.", slug="module-not-imported")
+E:\Projects\SQRs\booktrack\.venv\Lib\site-packages\coverage\control.py:915: CoverageWarning: No data was collected. (no-data-collected)
+  self._warn("No data was collected.", slug="no-data-collected")
+
+WARNING: Failed to generate report: No data to report.
+
+e:\Projects\SQRs\booktrack\.venv\Lib\site-packages\pytest_cov\plugin.py:336: CovReportWarning: Failed to generate report: No data to report.
+
+  warnings.warn(CovReportWarning(message), stacklevel=1)
+
+======================================================= ERRORS =======================================================
+______________________________ ERROR collecting backend/tests/fuzz/test_catalog_fuzz.py ______________________________ 
+backend\tests\fuzz\test_catalog_fuzz.py:5: in <module>
+    from core.catalog import *
+backend\core\__init__.py:1: in <module>
+    from .database import session_local, Base, engine
+backend\core\database.py:12: in <module>
+    config.get_database_connection_string(),
+backend\config\config.py:20: in get_database_connection_string
+    return self.conf["db"]["postgres"]["url"]
+E   AttributeError: 'Config' object has no attribute 'conf'
+-------------------------------------------------- Captured stdout --------------------------------------------------- 
+Warning: Configuration file was not found, hence not parsed!
+____________________________ ERROR collecting backend/tests/fuzz/test_favourites_fuzz.py _____________________________ 
+backend\tests\fuzz\test_favourites_fuzz.py:7: in <module>
+    from core.favourites import (
+backend\core\__init__.py:1: in <module>
+    from .database import session_local, Base, engine
+backend\core\database.py:12: in <module>
+    config.get_database_connection_string(),
+backend\config\config.py:20: in get_database_connection_string
+    return self.conf["db"]["postgres"]["url"]
+E   AttributeError: 'Config' object has no attribute 'conf'
+___________________________ ERROR collecting backend/tests/fuzz/test_reading_list_fuzz.py ____________________________ 
+backend\tests\fuzz\test_reading_list_fuzz.py:7: in <module>
+    from core.reading_list.models import ReadingListBook
+backend\core\__init__.py:1: in <module>
+    from .database import session_local, Base, engine
+backend\core\database.py:12: in <module>
+    config.get_database_connection_string(),
+backend\config\config.py:20: in get_database_connection_string
+    return self.conf["db"]["postgres"]["url"]
+E   AttributeError: 'Config' object has no attribute 'conf'
+_______________________________ ERROR collecting backend/tests/fuzz/test_token_fuzz.py _______________________________ 
+backend\tests\fuzz\test_token_fuzz.py:5: in <module>
+    from util.token import create_access_token, decode_access_token
+backend\util\__init__.py:1: in <module>
+    from .auth import *
+backend\util\auth.py:5: in <module>
+    from core.users import AuthenticatedUser
+backend\core\__init__.py:1: in <module>
+    from .database import session_local, Base, engine
+backend\core\database.py:12: in <module>
+    config.get_database_connection_string(),
+backend\config\config.py:20: in get_database_connection_string
+    return self.conf["db"]["postgres"]["url"]
+E   AttributeError: 'Config' object has no attribute 'conf'
+_______________________________ ERROR collecting backend/tests/unit/test_favourites.py _______________________________ 
+backend\tests\unit\test_favourites.py:5: in <module>
+    import core.favourites.crud as crud_module
+backend\core\__init__.py:1: in <module>
+    from .database import session_local, Base, engine
+backend\core\database.py:12: in <module>
+    config.get_database_connection_string(),
+backend\config\config.py:20: in get_database_connection_string
+    return self.conf["db"]["postgres"]["url"]
+E   AttributeError: 'Config' object has no attribute 'conf'
+________________________________ ERROR collecting backend/tests/unit/test_logging.py _________________________________ 
+backend\tests\unit\test_logging.py:4: in <module>
+    from core.logging import audit_logger
+backend\core\__init__.py:1: in <module>
+    from .database import session_local, Base, engine
+backend\core\database.py:12: in <module>
+    config.get_database_connection_string(),
+backend\config\config.py:20: in get_database_connection_string
+    return self.conf["db"]["postgres"]["url"]
+E   AttributeError: 'Config' object has no attribute 'conf'
+______________________________ ERROR collecting backend/tests/unit/test_reading_list.py ______________________________ 
+backend\tests\unit\test_reading_list.py:5: in <module>
+    from core.reading_list import *
+backend\core\__init__.py:1: in <module>
+    from .database import session_local, Base, engine
+backend\core\database.py:12: in <module>
+    config.get_database_connection_string(),
+backend\config\config.py:20: in get_database_connection_string
+    return self.conf["db"]["postgres"]["url"]
+E   AttributeError: 'Config' object has no attribute 'conf'
+_________________________________ ERROR collecting backend/tests/unit/test_users.py __________________________________ 
+backend\tests\unit\test_users.py:4: in <module>
+    from core.users.models import User, RefreshToken
+backend\core\__init__.py:1: in <module>
+    from .database import session_local, Base, engine
+backend\core\database.py:12: in <module>
+    config.get_database_connection_string(),
+backend\config\config.py:20: in get_database_connection_string
+    return self.conf["db"]["postgres"]["url"]
+E   AttributeError: 'Config' object has no attribute 'conf'
+================================================== warnings summary ================================================== 
+.venv\Lib\site-packages\streamlit\elements\vega_charts.py:368
+  E:\Projects\SQRs\booktrack\.venv\Lib\site-packages\streamlit\elements\vega_charts.py:368: AltairDeprecationWarning:  
+  Deprecated since altair=5.5.0. Use altair.theme instead.
+  Most cases require only the following change:
+
+      # Deprecated
+      alt.themes.enable('quartz')
+
+      # Updated
+      alt.theme.enable('quartz')
+
+  If your code registers a theme, make the following change:
+
+      # Deprecated
+      def custom_theme():
+          return {'height': 400, 'width': 700}
+      alt.themes.register('theme_name', custom_theme)
+      alt.themes.enable('theme_name')
+
+      # Updated
+      @alt.theme.register('theme_name', enable=True)
+      def custom_theme():
+          return alt.theme.ThemeConfig(
+              {'height': 400, 'width': 700}
+          )
+
+  See the updated User Guide for further details:
+      https://altair-viz.github.io/user_guide/api.html#theme
+      https://altair-viz.github.io/user_guide/customization.html#chart-themes
+    with alt.themes.enable("none") if alt.themes.active == "default" else nullcontext():  # type: ignore[attr-defined,unused-ignore]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=================================================== tests coverage =================================================== 
+__________________________________ coverage: platform win32, python 3.11.9-final-0 ___________________________________ 
+
+============================================== short test summary info ===============================================
+ERROR backend/tests/fuzz/test_catalog_fuzz.py - AttributeError: 'Config' object has no attribute 'conf'
+ERROR backend/tests/fuzz/test_favourites_fuzz.py - AttributeError: 'Config' object has no attribute 'conf'
+ERROR backend/tests/fuzz/test_reading_list_fuzz.py - AttributeError: 'Config' object has no attribute 'conf'
+ERROR backend/tests/fuzz/test_token_fuzz.py - AttributeError: 'Config' object has no attribute 'conf'
+ERROR backend/tests/unit/test_favourites.py - AttributeError: 'Config' object has no attribute 'conf'
+ERROR backend/tests/unit/test_logging.py - AttributeError: 'Config' object has no attribute 'conf'
+ERROR backend/tests/unit/test_reading_list.py - AttributeError: 'Config' object has no attribute 'conf'
+ERROR backend/tests/unit/test_users.py - AttributeError: 'Config' object has no attribute 'conf'
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Interrupted: 8 errors during collection !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+=========================================== 1 warning, 8 errors in 22.54s ============================================
